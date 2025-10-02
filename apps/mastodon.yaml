@@ -31,5 +31,8 @@ spec:
         mastodon:
           secrets:
             existingSecret: mastodon-secrets
+        postgresql:
+          disabled: true
+          hostname: saraneth
   sources: []
   project: mastodon
