@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destinations:
-  - namespace: nginx-ingress
+  - namespace: ingress-nginx
     server: https://kubernetes.default.svc
   - namespace: cert-manager
     server: https://kubernetes.default.svc
