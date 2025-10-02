@@ -10,6 +10,7 @@ spec:
     server: https://kubernetes.default.svc
   sourceRepos:
   - https://github.com/mastodon/chart.git
+  - https://mastodon.github.io/helm-charts/
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -20,7 +21,9 @@ spec:
     namespace: mastodon
     server: https://kubernetes.default.svc
   source:
-    path: /
-    repoURL: https://github.com/mastodon/chart.git
-    targetRevision: HEAD
+    path: ''
+    repoURL: https://mastodon.github.io/helm-charts/
+    targetRevision: 0.1.0
+    chart: mastodon
+  sources: []
   project: mastodon
