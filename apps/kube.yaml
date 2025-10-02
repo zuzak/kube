@@ -11,5 +11,7 @@ spec:
     repoURL: https://github.com/zuzak/argo.git
     path: kube
     targetRevision: HEAD
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
