@@ -27,7 +27,7 @@ spec:
     targetRevision: 5.3.0
     chart: mastodon
     helm:
-      values:
+      values: |
         mastodon:
           secrets:
             existingSecret: mastodon-secrets
