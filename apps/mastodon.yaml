@@ -11,6 +11,7 @@ spec:
   sourceRepos:
   - https://github.com/mastodon/chart.git
   - https://mastodon.github.io/helm-charts/
+  - https://fedihost.github.io/helm-charts
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -22,8 +23,8 @@ spec:
     server: https://kubernetes.default.svc
   source:
     path: ''
-    repoURL: https://mastodon.github.io/helm-charts/
-    targetRevision: 0.1.0
+    repoURL: https://fedihost.github.io/helm-charts
+    targetRevision: 5.3.0
     chart: mastodon
   sources: []
   project: mastodon
