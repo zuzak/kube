@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: mastodon
+  namespace: argocd
+spec:
+  destinations:
+  - name: in-cluster
+    namespace: mastodon
+    server: https://kubernetes.default.svc
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mastodon
+spec:
+  destination:
+    namespace: mastodon
+    server: https://kubernetes.default.svc
+  source:
+    path: /
+    repoURL: https://github.com/mastodon/chart/tree/main
+    targetRevision: HEAD
+  project: mastodon
