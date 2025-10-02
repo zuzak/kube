@@ -9,7 +9,7 @@ spec:
     namespace: mastodon
     server: https://kubernetes.default.svc
   sourceRepos:
-  - https://github.com/mastodon/*
+  - https://github.com/mastodon/chart.git
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -21,6 +21,6 @@ spec:
     server: https://kubernetes.default.svc
   source:
     path: /
-    repoURL: https://github.com/mastodon/chart/tree/main
+    repoURL: https://github.com/mastodon/chart.git
     targetRevision: HEAD
   project: mastodon
