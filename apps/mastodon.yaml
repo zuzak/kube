@@ -8,6 +8,8 @@ spec:
   - name: in-cluster
     namespace: mastodon
     server: https://kubernetes.default.svc
+  sourceRepos:
+  - https://github.com/mastodon/*
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
