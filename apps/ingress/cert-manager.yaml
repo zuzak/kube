@@ -6,7 +6,7 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: ingress
   source:
     repoURL: quay.io/jetstack/charts
     targetRevision: v1.18.2

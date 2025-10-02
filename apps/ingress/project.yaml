@@ -1,0 +1,11 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: ingress
+  namespace: argocd
+spec:
+  destinations:
+  - namespace: nginx-ingress
+  - namespace: cert-manager
+  sourceRepos:
+  - '*'
