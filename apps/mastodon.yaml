@@ -34,5 +34,7 @@ spec:
         postgresql:
           disabled: true
           hostname: saraneth
+          auth:
+            password: ""
   sources: []
   project: mastodon
