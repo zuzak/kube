@@ -9,6 +9,6 @@ spec:
   source:
     path: ''
     repoURL: https://argoproj.github.io/argo-helm
-    targetRevision: 3.21.0
+    targetRevision: 8.5.8
     chart: argo-cd
   project: default
