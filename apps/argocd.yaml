@@ -22,5 +22,5 @@ spec:
             tls: true
             ingressClassName: nginx
             annotations:
-              cert-manager.io/cluster-issuer: "letsencrypt-staging"
+              cert-manager.io/cluster-issuer: "letsencrypt-production"
               nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
