@@ -28,7 +28,8 @@ spec:
     chart: mastodon
     helm:
       values:
-        secrets:
-          existingSecret: mastodon-secret
+        mastodon:
+          secrets:
+            existingSecret: mastodon-secrets
   sources: []
   project: mastodon
