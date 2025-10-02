@@ -3,6 +3,7 @@ kind: Application
 metadata:
   name: argocd
 spec:
+  project: default
   destination:
     namespace: argocd
     server: https://kubernetes.default.svc
@@ -11,4 +12,15 @@ spec:
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: 8.5.8
     chart: argo-cd
-  project: default
+    helm:
+      values: |
+		global:
+		  domain: argocd.k3s.fluv.net
+		server:
+		  ingress:
+			enabled: true
+			ingressClassName: nginx
+			annotations:
+			  cert-manager.io/cluster-issuer: "letsencrypt-staging"
+			  nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+			tls: true
