@@ -14,8 +14,8 @@ spec:
         app: kuard
     spec:
       containers:
-      - image: httpd
+      - image: nginx
         imagePullPolicy: Always
         name: kuard
         ports:
-        - containerPort: 8080
+        - containerPort: 80
