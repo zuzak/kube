@@ -26,10 +26,9 @@ spec:
     namespace: mastodon
     server: https://kubernetes.default.svc
   source:
-    path: ''
     repoURL: https://github.com/mastodon/chart.git
     targetRevision: HEAD
-    path: /
+    path: ''
     helm:
       values: |
         mastodon:
