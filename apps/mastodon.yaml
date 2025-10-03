@@ -43,6 +43,7 @@ spec:
           postgresqlHostname: saraneth
         redis:
           auth:
-            existingSecret: mastodon-redis
+            password: changeme
+            # existingSecret: mastodon-redis
   sources: []
   project: mastodon
