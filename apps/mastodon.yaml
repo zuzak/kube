@@ -38,6 +38,8 @@ spec:
           enabled: false
         postgresql:
           disabled: true
+          auth:
+            existingSecret: mastodon-postgresql
           postgresqlHostname: saraneth
   sources: []
   project: mastodon
