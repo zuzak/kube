@@ -37,7 +37,7 @@ spec:
         elasticsearch:
           enabled: false
         postgresql:
-          disabled: true
+          enabled: false
           auth:
             existingSecret: mastodon-postgresql
           postgresqlHostname: saraneth
