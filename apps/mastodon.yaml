@@ -27,9 +27,9 @@ spec:
     server: https://kubernetes.default.svc
   source:
     path: ''
-    repoURL: https://fedihost.github.io/helm-charts
-    targetRevision: 5.3.0
-    chart: mastodon
+    repoURL: https://github.com/mastodon/chart.git
+    targetRevision: HEAD
+    path: /
     helm:
       values: |
         mastodon:
