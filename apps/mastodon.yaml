@@ -30,7 +30,7 @@ spec:
     targetRevision: HEAD
     path: '.'
     helm:
-      values: |
+      valuesObject:
         mastodon:
           secrets:
             existingSecret: mastodon-secrets
