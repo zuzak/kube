@@ -41,5 +41,8 @@ spec:
           auth:
             existingSecret: mastodon-postgresql
           postgresqlHostname: saraneth
+        redis:
+          auth:
+            existingSecret: mastodon-redis
   sources: []
   project: mastodon
