@@ -34,6 +34,8 @@ spec:
         mastodon:
           secrets:
             existingSecret: mastodon-secrets
+        elasticsearch:
+          enabled: false
         postgresql:
           disabled: true
           direct:
