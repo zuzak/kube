@@ -8,6 +8,10 @@ spec:
   - name: in-cluster
     namespace: mastodon
     server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    # Needed to bootstrap the namespace
+  - group: ''
+    kind: Namespace
   sourceRepos:
   - https://github.com/mastodon/chart.git
   - https://mastodon.github.io/helm-charts/
