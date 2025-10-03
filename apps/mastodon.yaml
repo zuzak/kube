@@ -28,7 +28,7 @@ spec:
   source:
     repoURL: https://github.com/mastodon/chart.git
     targetRevision: HEAD
-    path: ''
+    path: '.'
     helm:
       values: |
         mastodon:
