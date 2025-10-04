@@ -53,6 +53,9 @@ spec:
             bucket: mastodon-zuzakistan-com
             endpoint: https://storage.googleapis.com
             hostname: mstdn-media.zuzakistan.com
+          cron:
+            removeMedia:
+              enabled: false
         extraEnvVars:
           S3_FORCE_SINGLE_REQUEST: true
         ingress:
