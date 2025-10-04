@@ -38,6 +38,11 @@ spec:
           hooks:
             dbPrepare:
               enabled: false # required for Argo CD apparently https://github.com/mastodon/chart/blob/f0d07aac6069b90ca481d79be918ca24d190538d/values.yaml#L34
+          persistence:
+            assets:
+              existingClaim: mastodon-assets
+            system:
+              existingClaim: mastodon-storage
         ingress:
           annotations:
             cert-manager.io/cluster-issuer: "letsencrypt-staging"
