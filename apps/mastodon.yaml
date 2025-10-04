@@ -63,13 +63,13 @@ spec:
             cert-manager.io/cluster-issuer: "letsencrypt-production"
           ingressClassName: nginx
           hosts:
-            - host: mastodon.k3s.fluv.net
+            - host: mastodon.zuzakistan.com
               paths:
                 - path: "/"
           tls:
             - secretName: mastodon-tls
               hosts:
-                - mastodon.k3s.fluv.net
+                - mastodon.zuzakistan.com
         elasticsearch:
           enabled: false
         postgresql:
