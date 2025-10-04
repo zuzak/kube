@@ -32,7 +32,11 @@ spec:
     helm:
       valuesObject:
         mastodon:
-          local_domain: mastodon.k3s.fluv.net
+          local_domain: zuzakistan.com
+          web_domain: mastodon.k3s.fluv.net
+          alternate_domains:
+            - mastodon.zuzakistan.com
+          singleUserMode: true
           secrets:
             existingSecret: mastodon-secrets
           hooks:
@@ -67,5 +71,13 @@ spec:
           hostname: saraneth
           auth:
             existingSecret: mastodon-redis
+        s3:
+          enabled: true
+          existingSecret: mastodon-s3
+          bucket: mastodon-zuzakistan-com
+          endpoint: https://storage.googleapis.com
+          hostname: mstdn-media.zuzakistan.com
+        extraEnvVars:
+          S3_FORCE_SINGLE_REQUEST: true
   sources: []
   project: mastodon
