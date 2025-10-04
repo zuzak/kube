@@ -46,7 +46,7 @@ spec:
         ingress:
           annotations:
             cert-manager.io/cluster-issuer: "letsencrypt-staging"
-          ingressClassName:
+          ingressClassName: nginx
           hosts:
             - host: mastodon.k3s.fluv.net
               paths:
