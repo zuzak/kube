@@ -33,9 +33,7 @@ spec:
       valuesObject:
         mastodon:
           local_domain: zuzakistan.com
-          web_domain: mastodon.k3s.fluv.net
-          alternate_domains:
-            - mastodon.zuzakistan.com
+          web_domain: mastodon.zuzakistan.com
           singleUserMode: true
           secrets:
             existingSecret: mastodon-secrets
