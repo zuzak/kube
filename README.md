@@ -54,7 +54,6 @@ which means that any persistent storage used by our containers will, by default,
 be replicated in both nodes.
 
 ## End-user services
-.g/addp-hunk-edit.diff+                                                                                   buffers
 
 We&rsquo;re running a single-user [**Mastodon**](https://joinmastodon.org/) instance on
 Kubernetes. This used to run solely on my VPS, but this caused problems: it is
