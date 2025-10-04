@@ -60,7 +60,7 @@ spec:
           S3_FORCE_SINGLE_REQUEST: true
         ingress:
           annotations:
-            cert-manager.io/cluster-issuer: "letsencrypt-staging"
+            cert-manager.io/cluster-issuer: "letsencrypt-production"
           ingressClassName: nginx
           hosts:
             - host: mastodon.k3s.fluv.net
