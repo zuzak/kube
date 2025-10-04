@@ -29,6 +29,13 @@ and serve the ingress traffic to the outside world.
 
 ### Infrastructure
 
+We&rsquo;re using [**k3s**](https://k3s.io/) for our Kubernetes distribution.
+I picked it as it was lightweight enough to run on my VPS alongside all the
+other non-Kubernetes things my VPS is doing, while being portable enough that
+I could feasibly run it on any hardware I might want to extend this cluster to
+in the future. It also came bundled with some integrations out the box that made
+my life easier.
+
 We&rsquo;re running [**Argo CD**](https://argo-cd.readthedocs.io/en/stable/),
 which is used to facilitate &ldquo;declarative GitOps&rdquo;: when you push
 some YAML code to this repository, Argo CD will notice the change and will take
