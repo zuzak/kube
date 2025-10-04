@@ -46,7 +46,7 @@ spec:
             assets:
               existingClaim: mastodon-assets
             system:
-              existingClaim: mastodon-storage
+              existingClaim: mastodon-system
         ingress:
           annotations:
             cert-manager.io/cluster-issuer: "letsencrypt-staging"
