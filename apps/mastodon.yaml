@@ -32,6 +32,7 @@ spec:
     helm:
       valuesObject:
         mastodon:
+          local_domain: mastodon.k3s.fluv.net
           secrets:
             existingSecret: mastodon-secrets
           hooks:
