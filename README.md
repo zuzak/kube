@@ -2,7 +2,6 @@ This repository contains the configuration for my personal Kubernetes cluster.
 
 ## Getting this running
 To bootstrap anew:
-1. provision a cluster (I used [k3s](https://k3s.io/)
 1. provision a cluster (I used [k3s](https://k3s.io/) with `--disable=traefik`)
 2. install [Argo CD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
 3. sign in and click "new app" then "edit as YAML"
@@ -11,13 +10,13 @@ To bootstrap anew:
 ## Cluster overview
 
 I have two Kubernetes nodes at the moment.
-One of them is on my [Bitfolk](https://bitfolk.com) VPS, which is your standard
+One of them is on my [**Bitfolk**](https://bitfolk.com) VPS, which is your standard
 Debian server running in a datacentre somewhere. Its hostname is `saraneth`.
 
-The other is a [Raspberry Pi 5 8GB](https://www.raspberrypi.com/products/raspberry-pi-5/)
+The other is a [**Raspberry Pi 5** 8GB](https://www.raspberrypi.com/products/raspberry-pi-5/)
 running on my desk. Its hostname is `pi`.
 
-They&rsquo;re connected together via a [Tailscale](https://tailscale.com) mesh
+They&rsquo;re connected together via a [**Tailscale**](https://tailscale.com) mesh
 virtual private network using the k3s [experimental integration](https://docs.k3s.io/networking/distributed-multicloud#integration-with-the-tailscale-vpn-provider-experimental).
 
 As my VPS already had a PostgreSQL server running, we&rsquo;re using that for
@@ -30,27 +29,27 @@ and serve the ingress traffic to the outside world.
 
 ### Infrastructure
 
-We&rsquo;re running [Argo CD](https://argo-cd.readthedocs.io/en/stable/),
+We&rsquo;re running [**Argo CD**](https://argo-cd.readthedocs.io/en/stable/),
 which is used to facilitate &ldquo;declarative GitOps&rdquo;: when you push
 some YAML code to this repository, Argo CD will notice the change and will take
 action to make sure the state of the Kubernetes cluster aligns with the code
 you wrote.
 
-We are using [Ingress-Nginx](https://kubernetes.github.io/ingress-nginx/) and
-[cert-manager])https://cert-manager.io/) to expose our HTTP/HTTPS services to
+We are using [**Ingress-Nginx**](https://kubernetes.github.io/ingress-nginx/) and
+[**cert-manager**])https://cert-manager.io/) to expose our HTTP/HTTPS services to
 the outside world. As we&rsquo;re using this instead of Traefik, the ingress
 controller that is bundled with k3s, we can install k3s with the
 `--disable=traefik` flag to save some overhead. I chose to use Ingress-Nginx as
 I was already familiar with it.
 
-For volumes and storage, we&rsquo;re using [Longhorn](https://longhorn.io/),
+For volumes and storage, we&rsquo;re using [**Longhorn**](https://longhorn.io/),
 which means that any persistent storage used by our containers will, by default,
 be replicated in both nodes.
 
 ## End-user services
 .g/addp-hunk-edit.diff+                                                                                   buffers
 
-We&rsquo;re running a single-user [Mastodon](https://joinmastodon.org/) instance on
+We&rsquo;re running a single-user [**Mastodon**](https://joinmastodon.org/) instance on
 Kubernetes. This used to run solely on my VPS, but this caused problems: it is
 a disconcertingly resource-intensive Ruby program, and it meant my VPS often
 ran out of RAM and fell offline halfway through an upgrade.
