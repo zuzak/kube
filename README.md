@@ -43,7 +43,7 @@ action to make sure the state of the Kubernetes cluster aligns with the code
 you wrote.
 
 We are using [**Ingress-Nginx**](https://kubernetes.github.io/ingress-nginx/) and
-[**cert-manager**])https://cert-manager.io/) to expose our HTTP/HTTPS services to
+[**cert-manager**](https://cert-manager.io/) to expose our HTTP/HTTPS services to
 the outside world. As we&rsquo;re using this instead of Traefik, the ingress
 controller that is bundled with k3s, we can install k3s with the
 `--disable=traefik` flag to save some overhead. I chose to use Ingress-Nginx as
