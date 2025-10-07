@@ -43,10 +43,14 @@ spec:
                   - prometheus.k3s.fluv.net
           prometheusSpec:
             storageSpec:
-              diskSelector: durable # i.e. not MicroSD
-              resources:
-                requests:
-                  storage: 50Gi
+              volumeClaimTemplate:
+                storageClass: longhorn
+                accessModes:
+                  - ReadWriteOnce
+                diskSelector: durable # i.e. not MicroSD
+                resources:
+                  requests:
+                    storage: 50Gi
         prometheusOperator:
           admissionWebhooks:
             certManager:
