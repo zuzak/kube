@@ -38,8 +38,3 @@ spec:
               requests:
                 storage: 50Gi
   project: monitoring
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
-      enabled: true
