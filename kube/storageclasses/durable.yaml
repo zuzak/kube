@@ -8,6 +8,7 @@ metadata:
       a Longhorn StorageClass that avoids using SD cards
 parameters:
   diskSelector: durable
+  numberOfReplicas: "0" # we only have 1 non-microSD node atm
 provisioner: driver.longhorn.io
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
