@@ -54,6 +54,9 @@ spec:
           cron:
             removeMedia:
               enabled: false
+          metrics:
+            prometheus:
+              enable: true
         extraEnvVars:
           S3_FORCE_SINGLE_REQUEST: true
         ingress:
