@@ -44,12 +44,13 @@ spec:
           prometheusSpec:
             storageSpec:
               volumeClaimTemplate:
-                storageClassName: longhorn-durable
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 50Gi
+                spec:
+                  storageClassName: longhorn-durable
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 50Gi
         prometheusOperator:
           admissionWebhooks:
             certManager:
