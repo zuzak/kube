@@ -44,10 +44,9 @@ spec:
           prometheusSpec:
             storageSpec:
               volumeClaimTemplate:
-                storageClass: longhorn
+                storageClass: longhorn-durable
                 accessModes:
                   - ReadWriteOnce
-                diskSelector: durable # i.e. not MicroSD
                 resources:
                   requests:
                     storage: 50Gi
