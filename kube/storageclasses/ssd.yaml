@@ -3,7 +3,9 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: longhorn-durable
-  kubernetes.io/description: "a Longhorn StorageClass that avoids using SD cards"
+  annotations:
+    kubernetes.io/description: |
+      a Longhorn StorageClass that avoids using SD cards
 parameters:
   diskSelector: durable
 provisioner: driver.longhorn.io
