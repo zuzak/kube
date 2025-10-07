@@ -49,6 +49,8 @@ spec:
           enabled: false
         kubeScheduler:
           enabled: false
+        kubeProxy:
+          enabled: false
         cleanPrometheusOperatorObjectNames: true
         prometheusSpec:
           storageSpec:
@@ -57,4 +59,6 @@ spec:
             resources:
               requests:
                 storage: 50Gi
+        defaultRules:
+          create: false
   project: monitoring
