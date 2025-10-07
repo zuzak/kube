@@ -23,4 +23,5 @@ spec:
             ingressClassName: nginx
             annotations:
               cert-manager.io/cluster-issuer: "letsencrypt-production"
+              nginx.ingress.kubernetes.io/whitelist-source-range: 100.0.0.0/8
               nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"

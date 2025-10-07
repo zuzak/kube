@@ -21,6 +21,7 @@ spec:
             ingressClassName: nginx
             annotations:
               cert-manager.io/cluster-issuer: letsencrypt-production
+              nginx.ingress.kubernetes.io/whitelist-source-range: 100.0.0.0/8
             hosts:
               - grafana.k3s.fluv.net
             tls:
@@ -35,6 +36,7 @@ spec:
             paths: [ / ]
             annotations:
               cert-manager.io/cluster-issuer: letsencrypt-production
+              nginx.ingress.kubernetes.io/whitelist-source-range: 100.0.0.0/8
             hosts:
               - prometheus.k3s.fluv.net
             tls:
