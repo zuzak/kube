@@ -51,7 +51,9 @@ I was already familiar with it.
 
 For volumes and storage, we&rsquo;re using [**Longhorn**](https://longhorn.io/),
 which means that any persistent storage used by our containers will, by default,
-be replicated in both nodes.
+be replicated in both nodes. As I want to run some applications that have heavy
+read/write activity, I have configured a StorageClass that removes SD cards from
+the pool where needed.
 
 ## End-user services
 
