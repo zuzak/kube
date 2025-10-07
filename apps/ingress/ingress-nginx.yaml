@@ -11,7 +11,7 @@ spec:
   project: ingress
   source:
     repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: 4.13.3
+    targetRevision: 4.13.*
     chart: ingress-nginx
   destination:
     server: https://kubernetes.default.svc
