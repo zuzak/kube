@@ -7,10 +7,12 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
+    kubernetes.io/description: |
+      App of apps that defines all the other things Argo CD should manage
 spec:
   project: default
   source:
-    repoURL: https://github.com/zuzak/argo.git
+    repoURL: https://github.com/zuzak/kube.git # this repo!
     path: apps
     targetRevision: HEAD
     directory:

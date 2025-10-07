@@ -5,10 +5,13 @@ metadata:
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  annotations:
+    kubernetes.io/description: |
+      Generic project for assorted standard k8s definitions
 spec:
   project: default
   source:
-    repoURL: https://github.com/zuzak/argo.git
+    repoURL: https://github.com/zuzak/kube.git # this repo!
     path: kube
     targetRevision: HEAD
     directory:
