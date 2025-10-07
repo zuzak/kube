@@ -43,7 +43,6 @@ spec:
                   - prometheus.k3s.fluv.net
           prometheusSpec:
             storageSpec:
-              storageClassName: longhorn
               diskSelector: durable # i.e. not MicroSD
               resources:
                 requests:
