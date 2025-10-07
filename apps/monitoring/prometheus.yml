@@ -19,6 +19,8 @@ spec:
           ingress:
             enabled: true
             ingressClassName: nginx
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-production
             hosts:
               - grafana.k3s.fluv.net
             tls:
