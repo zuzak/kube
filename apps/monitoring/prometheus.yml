@@ -27,6 +27,20 @@ spec:
               - secretName: grafana-k3s-fluv-net-tls
                 hosts:
                   - grafana.k3s.fluv.net
+        prometheus:
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            pathType: ImplementationSpecific
+            paths: [ / ]
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-production
+            hosts:
+              - prometheus.k3s.fluv.net
+            tls:
+              - secretName: prometheus-k3s-fluv-net-tls
+                hosts:
+                  - prometheus.k3s.fluv.net
         prometheusOperator:
           admissionWebhooks:
             certManager:
