@@ -27,6 +27,10 @@ spec:
               - secretName: grafana-k3s-fluv-net-tls
                 hosts:
                   - grafana.k3s.fluv.net
+        prometheusOperator:
+          admissionWebhooks:
+            certManager:
+              enabled: true
         kubeEtcd:
           enabled: false
         kubeScheduler:
