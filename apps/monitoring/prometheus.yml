@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    path: kube-prometheus-stack
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: HEAD
+    helm:
+      valuesObject:
+        alertmanager:
+          enabled: false
+        grafana:
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - grafana.k3s.fluv.net
+            tls:
+              - secretName: grafana-k3s-fluv-net-tls
+                hosts:
+                  - grafana.k3s.fluv.net
+        kubeEtcd:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+        cleanPrometheusOperatorObjectNames: true
+        prometheusSpec:
+          storageSpec:
+            storageClassName: longhorn
+            diskSelector: durable # i.e. not MicroSD
+            resources:
+              requests:
+                storage: 50Gi
+  project: monitoring
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+      enabled: true
