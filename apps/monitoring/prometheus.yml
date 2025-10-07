@@ -62,3 +62,6 @@ spec:
         defaultRules:
           create: false
   project: monitoring
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true # needed because prometheuses.monitoring.coreos.com is massive
