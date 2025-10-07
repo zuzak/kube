@@ -41,6 +41,13 @@ spec:
               - secretName: prometheus-k3s-fluv-net-tls
                 hosts:
                   - prometheus.k3s.fluv.net
+          prometheusSpec:
+            storageSpec:
+              storageClassName: longhorn
+              diskSelector: durable # i.e. not MicroSD
+              resources:
+                requests:
+                  storage: 50Gi
         prometheusOperator:
           admissionWebhooks:
             certManager:
@@ -52,13 +59,6 @@ spec:
         kubeProxy:
           enabled: false
         cleanPrometheusOperatorObjectNames: true
-        prometheusSpec:
-          storageSpec:
-            storageClassName: longhorn
-            diskSelector: durable # i.e. not MicroSD
-            resources:
-              requests:
-                storage: 50Gi
         defaultRules:
           create: false
   project: monitoring
