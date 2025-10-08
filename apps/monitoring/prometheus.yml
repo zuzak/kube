@@ -37,6 +37,8 @@ spec:
                 hosts:
                   - prometheus.k3s.fluv.net
           prometheusSpec:
+            podMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorSelectorNilUsesHelmValues: false
             storageSpec:
               volumeClaimTemplate:
                 spec:
