@@ -25,3 +25,5 @@ spec:
             enabled: false
           thanosrulers:
             enabled: false
+          prometheusrules:
+            enabled: false
