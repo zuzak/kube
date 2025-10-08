@@ -3,16 +3,21 @@ kind: Application
 metadata:
   name: prometheus
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
+  project: monitoring
   source:
     path: charts/kube-prometheus-stack
     repoURL: https://github.com/prometheus-community/helm-charts.git
     targetRevision: HEAD
     helm:
       valuesObject:
+        crds:
+          enabled: false # configured elsewhere in this repo
         alertmanager:
           enabled: false
         grafana:
@@ -54,7 +59,3 @@ spec:
         cleanPrometheusOperatorObjectNames: true
         defaultRules:
           create: false
-  project: monitoring
-  syncPolicy:
-    syncOptions:
-      - ServerSideApply=true # needed because prometheuses.monitoring.coreos.com is massive

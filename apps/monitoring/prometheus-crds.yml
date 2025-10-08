@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-crds
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  project: monitoring
+  source:
+    path: charts/prometheus-operator-crds
+    repoURL: https://github.com/prometheus-community/helm-charts.git
+    targetRevision: HEAD
+    helm:
+      valuesObject:
+        crds:
+          annotations:
+            argocd.argoproj.io/sync-options: ServerSideApply=true
+          alertmanagerconfigs:
+            enabled: false
+          alertmanagers:
+            enabled: false
+          thanosrulers:
+            enabled: false
