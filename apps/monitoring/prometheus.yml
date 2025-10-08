@@ -16,6 +16,7 @@ spec:
     targetRevision: HEAD
     helm:
       valuesObject:
+        fullnameOverride: prometheus-stack
         crds:
           enabled: false # configured elsewhere in this repo
         alertmanager:
