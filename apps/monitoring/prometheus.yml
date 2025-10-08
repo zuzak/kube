@@ -1,0 +1,60 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  source:
+    path: charts/kube-prometheus-stack
+    repoURL: https://github.com/prometheus-community/helm-charts.git
+    targetRevision: HEAD
+    helm:
+      valuesObject:
+        alertmanager:
+          enabled: false
+        grafana:
+          enabled: false
+        prometheus:
+          ingress:
+            enabled: false
+            ingressClassName: nginx
+            pathType: ImplementationSpecific
+            paths: [ / ]
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-production
+            hosts:
+              - prometheus.k3s.fluv.net
+            tls:
+              - secretName: prometheus-k3s-fluv-net-tls
+                hosts:
+                  - prometheus.k3s.fluv.net
+          prometheusSpec:
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: longhorn-durable
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 50Gi
+        prometheusOperator:
+          admissionWebhooks:
+            certManager:
+              enabled: true
+        kubeEtcd:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+        kubeProxy:
+          enabled: false
+        cleanPrometheusOperatorObjectNames: true
+        defaultRules:
+          create: false
+  project: monitoring
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true # needed because prometheuses.monitoring.coreos.com is massive
