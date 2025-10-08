@@ -58,6 +58,8 @@ spec:
           enabled: false
         kubeProxy:
           enabled: false
+        kubeControllerManager:
+          enabled: false
         cleanPrometheusOperatorObjectNames: true
         defaultRules:
           create: false
