@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: mastodon
+  namespace: mastodon
+spec:
+  endpoints:
+  - interval: 30s
+    path: /metrics
+    port: metrics
+    scrapeTimeout: 3s
+  namespaceSelector:
+    matchNames:
+    - mastodon
+  selector:
+    matchLabels:
+      monitoring: enabled
+      app.kubernetes.io/instance: mastodon
+      app.kubernetes.io/name: mastodon
