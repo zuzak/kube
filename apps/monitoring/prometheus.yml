@@ -24,7 +24,7 @@ spec:
           enabled: false
         prometheus:
           ingress:
-            enabled: false
+            enabled: true
             ingressClassName: nginx
             pathType: ImplementationSpecific
             paths: [ / ]
