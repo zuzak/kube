@@ -5,7 +5,7 @@ metadata:
   name: longhorn-durable
   annotations:
     kubernetes.io/description: |
-      a Longhorn StorageClass that avoids using SD cards
+      a Longhorn storage class that avoids using SD cards
 parameters:
   diskSelector: durable
 provisioner: driver.longhorn.io
