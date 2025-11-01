@@ -56,12 +56,12 @@ spec:
               readOnly: true
         postgresql:
           enabled: true
+          auth:
+            existing-secret: authentik-postgresql
           persistence:
             enabled: true
             storageClass: longhorn
             accessModes:
               - ReadWriteOnce
-          passwordUpdateJob:
-            enabled: true
         redis:
           enabled: true
