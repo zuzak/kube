@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: oauthproxy
+  name: prometheus-oauthproxy
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -9,7 +9,7 @@ metadata:
     kubernetes.io/description: |
       Middleware to protect private endpoints
 spec:
-  project: identity
+  project: monitoring
   source:
     repoURL: https://github.com/zuzak/kube.git # this repo!
     path: oauthproxy
