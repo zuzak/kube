@@ -20,7 +20,7 @@ spec:
       - args:
         - --provider=github
         - --upstream=file:///dev/null
-        - --email=domain=*
+        - --email-domain=*
         - --http-address=0.0.0.0:4180
         - --github-repo=zuzak/kube # this repo!
         # Register a new application
