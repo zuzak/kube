@@ -16,7 +16,7 @@ spec:
       valuesObject:
         authentik:
           postgresql:
-            password: file:///pgcreds/password
+            password: file:///pgcreds/postgres-password
         worker:
           metrics:
             enabled: true
