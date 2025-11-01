@@ -24,12 +24,14 @@ spec:
           enabled: false
         prometheus:
           ingress:
-            enabled: false
+            enabled: true
             ingressClassName: nginx
             pathType: ImplementationSpecific
             paths: [ / ]
             annotations:
               cert-manager.io/cluster-issuer: letsencrypt-production
+              nginx.ingress.kubernetes.io/auth-url: "https://account.k3s.fluv.net/oauth2/auth"
+              nginx.ingress.kubernetes.io/auth-signin: "https://accounts.k3s.fluv.net/oauth2/start?rd=$escaped_request_uri"
             hosts:
               - prometheus.k3s.fluv.net
             tls:

@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: oauthproxy
+  namespace: oauth-proxy
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    kubernetes.io/description: |
+      Middleware to protect private endpoints
+spec:
+  project: identity
+  source:
+    repoURL: https://github.com/zuzak/kube.git # this repo!
+    path: oauthproxy
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
