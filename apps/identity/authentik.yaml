@@ -61,5 +61,7 @@ spec:
             storageClass: longhorn
             accessModes:
               - ReadWriteOnce
+          passwordUpdateJob:
+            enabled: true
         redis:
           enabled: true
