@@ -8,6 +8,14 @@ spec:
     server: https://kubernetes.default.svc
     namespace: authentik
   project: identity
+  syncOptions:
+    - RespectIgnoreDifferences=true
+  ignoreDifferences:
+    # the helm chart tries to regen this every deploy, so don't:
+  - kind: Secret
+    name: authentik-postgresq
+    jsonPointers:
+      - /data
   source:
     path: charts/authentik
     repoURL: https://github.com/goauthentik/helm.git
