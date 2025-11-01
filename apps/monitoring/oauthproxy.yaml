@@ -17,5 +17,5 @@ spec:
     directory:
       recurse: true
   destination:
-    namespace: oauth-proxy
+    namespace: monitoring
     server: https://kubernetes.default.svc

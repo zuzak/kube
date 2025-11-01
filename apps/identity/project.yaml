@@ -9,8 +9,6 @@ spec:
   destinations:
   - namespace: authentik
     server: https://kubernetes.default.svc
-  - namespace: oauth-proxy
-    server: https://kubernetes.default.svc
   sourceRepos:
   - '*'
   clusterResourceWhitelist:
