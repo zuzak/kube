@@ -63,7 +63,3 @@ spec:
               - ReadWriteOnce
         redis:
           enabled: true
-        global:
-          envFrom:
-            - secretRef:
-              name: authentik
