@@ -14,11 +14,22 @@ spec:
     targetRevision: HEAD
     helm:
       valuesObject:
+        authentik:
+          postgresql:
+            password: file:///pgcreds/password
         worker:
           metrics:
             enabled: true
             serviceMonitor:
               enabled: true
+          volumes:
+            - name: pgcreds
+              secret:
+                secretName: authentik-postgresql
+          volumeMounts:
+            - name: pgcreds
+              mountPath: /pgcreds
+              readOnly: true
         server:
           metrics:
             enabled: true
@@ -35,6 +46,14 @@ spec:
               - secretName: authentik-tls
                 hosts:
                   - authentik.k3s.fluv.net
+          volumes:
+            - name: pgcreds
+              secret:
+                secretName: authentik-postgresql
+          volumeMounts:
+            - name: pgcreds
+              mountPath: /pgcreds
+              readOnly: true
         postgresql:
           enabled: true
           persistence:
