@@ -18,33 +18,31 @@ spec:
     spec:
       containers:
       - args:
-        - --provider=github
+        - --provider=oidc
         - --upstream=file:///dev/null
         - --email-domain=*
         - --http-address=0.0.0.0:4180
         - --github-org=zuzakistan
         - --whitelist-domain=*.k3s.fluv.net
         - --skip-provider-button=false
-        # Register a new application
-        # https://github.com/settings/applications/new
         env:
+        - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+          valueFrom:
+            secretKeyRef:
+              name: authentik
+              key: issuer-url
         - name: OAUTH2_PROXY_COOKIE_DOMAIN
           value: .k3s.fluv.net
         - name: OAUTH2_PROXY_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: github
+              name: authentik
               key: client-id
         - name: OAUTH2_PROXY_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: github
+              name: authentik
               key: client-secret
-        - name: OAUTH2_PROXY_GITHUB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: github
-              key: token
         # docker run -ti --rm python:3-alpine python -c 'import secrets,base64; print(base64.b64encode(base64.b64encode(secrets.token_bytes(16))));'
         - name: OAUTH2_PROXY_COOKIE_SECRET
           valueFrom:
