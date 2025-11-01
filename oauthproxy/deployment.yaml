@@ -22,7 +22,8 @@ spec:
         - --upstream=file:///dev/null
         - --email-domain=*
         - --http-address=0.0.0.0:4180
-        - --github-org=zuzakistan # this repo!
+        - --github-users=zuzak
+        #- --github-org=zuzakistan # this repo!
         - --whitelist-domain=*.k3s.fluv.net
         - --skip-provider-button=false
         # Register a new application
