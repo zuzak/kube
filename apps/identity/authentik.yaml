@@ -38,7 +38,7 @@ spec:
           ingress:
             enabled: true
             annotations:
-              cert-manager.io/cluster-issuer: "letsencrypt-staging"
+              cert-manager.io/cluster-issuer: "letsencrypt-production"
             ingressClassName: nginx
             hosts:
               - authentik.k3s.fluv.net
