@@ -31,7 +31,7 @@ spec:
             policy.csv: |
               g, authentik Admins, role:admin
             scopes: '[groups]'
-
+          admin.enabled: false
         dex:
           enabled: false
         server:
