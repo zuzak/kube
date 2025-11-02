@@ -26,6 +26,7 @@ spec:
               clientID: $authentik:client-id
               clientSecret: $authentik:client-secret
             oidc.tls.insecure.skip.verify: true
+          rbac:
             policy.default: role:readonly
             policy.csv: |
               g, authentik Admins, role:admin
