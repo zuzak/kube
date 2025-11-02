@@ -18,6 +18,8 @@ spec:
           domain: argocd.k3s.fluv.net
         configs:
           cm:
+            # Pulls from the authentik secret in argocd namespace
+            # Secret must have label app.kubernetes.io/part-of: argocd
             oidc.config: |
               name: Authentik
               issuer: https://authentik.k3s.fluv.net/application/o/argo-cd/
