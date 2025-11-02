@@ -29,6 +29,12 @@ spec:
               nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
               nginx.ingress.kubernetes.io/auth-url: https://authentik-server.authentik.svc.cluster.local/outpost.goauthentik.io/auth/nginx
               nginx.ingress.kubernetes.io/auth-signin-redirect-param: rd
+            hosts:
+              - longhorn.k3s.fluv.net
+            tls:
+              - secretName: longhorn-k3s-fluv-net-tls
+                hosts:
+                  - longhorn.k3s.fluv.net
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
