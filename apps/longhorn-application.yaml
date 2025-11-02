@@ -20,6 +20,15 @@ spec:
             jobEnabled: false
           persistence:
             defaultClassReplicaCount: 2
+          ingress:
+            enabled: true
+            tls: true
+            ingressClassName: nginx
+            annotations:
+              cert-manager.io/cluster-issuer: "letsencrypt-staging"
+              nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+              nginx.ingress.kubernetes.io/auth-url: https://authentik-server.authentik.svc.cluster.local/outpost.goauthentik.io/auth/nginx
+              nginx.ingress.kubernetes.io/auth-signin-redirect-param: rd
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
