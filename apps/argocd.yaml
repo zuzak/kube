@@ -16,6 +16,15 @@ spec:
       values: |
         global:
           domain: argocd.k3s.fluv.net
+        configs:
+          cm:
+            oidc.config.name: Authentik
+            oidc.config.issuer: https://authentik.k3s.fluv.net/application/o/argo-cd/
+            oidc.config.clientID: $authentik:client-id
+            oidc.config.clientSecret: $authentik:client-secret
+            oidc.tls.insecure.skip.verify: true
+        dex:
+          enabled: false
         server:
           ingress:
             enabled: true
