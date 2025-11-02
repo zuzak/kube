@@ -22,8 +22,8 @@ spec:
         - --upstream=file:///dev/null
         - --email-domain=*
         - --http-address=0.0.0.0:4180
-        - --github-org=zuzakistan
         - --whitelist-domain=*.k3s.fluv.net
+        - --insecure-oidc-allow-unverified-email=true
         - --skip-provider-button=false
         env:
         - name: OAUTH2_PROXY_OIDC_ISSUER_URL
