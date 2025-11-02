@@ -15,13 +15,13 @@ spec:
       repoURL: https://charts.longhorn.io/
       targetRevision: v1.10.*
       helm:
-        values: |
+        valuesObject:
           preUpgradeChecker:
             jobEnabled: false
           persistence:
             defaultClassReplicaCount: 2
           ingress:
-            enabled: true
+            enabled: false
             tls: true
             ingressClassName: nginx
             annotations:
