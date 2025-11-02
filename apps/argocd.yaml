@@ -13,7 +13,7 @@ spec:
     targetRevision: 8.*
     chart: argo-cd
     helm:
-      values: |
+      valuesObject:
         global:
           domain: argocd.k3s.fluv.net
         configs:
