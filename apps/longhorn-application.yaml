@@ -26,7 +26,6 @@ spec:
             ingressClassName: nginx
             annotations:
               cert-manager.io/cluster-issuer: "letsencrypt-staging"
-              nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
               nginx.ingress.kubernetes.io/auth-signin: >-
                 https://authentik-server.authentik.svc.cluster.local/outpost.goauthentik.io/auth/longhorn
               nginx.ingress.kubernetes.io/auth-signin-redirect-param: rd
