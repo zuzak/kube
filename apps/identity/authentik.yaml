@@ -16,6 +16,9 @@ spec:
       name: authentik-postgresql
       jsonPointers:
         - /data
+    - kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations/checksum~secret
   source:
     path: charts/authentik
     repoURL: https://github.com/goauthentik/helm.git
