@@ -26,12 +26,12 @@ spec:
               clientID: $authentik:client-id
               clientSecret: $authentik:client-secret
             oidc.tls.insecure.skip.verify: true
+            admin.enabled: false
           rbac:
             policy.default: role:readonly
             policy.csv: |
               g, authentik Admins, role:admin
-            scopes: '[groups]'
-          admin.enabled: false
+            scopes: '[groups]' 
         dex:
           enabled: false
         server:
