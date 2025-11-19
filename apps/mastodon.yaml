@@ -27,7 +27,7 @@ spec:
     server: https://kubernetes.default.svc
   source:
     repoURL: https://github.com/mastodon/chart.git
-    targetRevision: 2486b9a772fb590cd56438d88eeaf5170038ade4 # v4.4.8
+    targetRevision: HEAD
     path: '.'
     helm:
       valuesObject:
