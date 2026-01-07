@@ -10,6 +10,7 @@ spec:
   source:
     repoURL: https://cloudnative-pg.github.io/charts
     chart: cloudnative-pg
+    targetRevision: v0.27.*
   project: cnpg
   syncPolicy:
     syncOptions:
