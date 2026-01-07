@@ -1,0 +1,17 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cnpg
+spec:
+  destination:
+    namespace: cnpg
+    server: https://kubernetes.default.svc
+  source:
+    path: releases/
+    repoURL: https://github.com/cloudnative-pg/cloudnative-pg.git
+    targetRevision: main
+  project: cnpg
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

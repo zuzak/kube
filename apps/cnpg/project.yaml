@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cnpg
+  namespace: argocd
+spec:
+  destinations:
+  - namespace: cnpg
+    server: https://kubernetes.default.svc
+  sourceRepos:
+  - '*'
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
