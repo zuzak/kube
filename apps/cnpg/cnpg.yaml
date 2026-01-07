@@ -8,9 +8,8 @@ spec:
     namespace: cnpg
     server: https://kubernetes.default.svc
   source:
-    path: releases/
-    repoURL: https://github.com/cloudnative-pg/cloudnative-pg.git
-    targetRevision: main
+    repoURL: https://cloudnative-pg.github.io/charts
+    chart: cloudnative-pg
   project: cnpg
   syncPolicy:
     syncOptions:
