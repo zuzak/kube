@@ -20,7 +20,7 @@ spec:
     repoURL: https://github.com/goauthentik/helm.git
     targetRevision: HEAD
     helm:
-      valuesObject:
+      values: |
         authentik:
           postgresql:
             host: file:///pgcreds/host
