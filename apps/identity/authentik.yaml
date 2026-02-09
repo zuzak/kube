@@ -12,10 +12,6 @@ spec:
     syncOptions:
       - RespectIgnoreDifferences=true
   ignoreDifferences:
-    - kind: Secret
-      name: authentik-postgresql
-      jsonPointers:
-        - /data
     - kind: Deployment
       jsonPointers:
         - /spec/template/metadata/annotations/checksum~secret
@@ -64,7 +60,7 @@ spec:
           volumes:
             - name: pgcreds
               secret:
-                secretName: authentik-postgresql
+                secretName: authentik-postgres-app
           volumeMounts:
             - name: pgcreds
               mountPath: /pgcreds
