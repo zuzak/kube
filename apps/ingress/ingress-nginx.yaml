@@ -13,6 +13,19 @@ spec:
     repoURL: https://kubernetes.github.io/ingress-nginx
     targetRevision: 4.13.*
     chart: ingress-nginx
+    helm:
+      values: |
+        controller:
+          # NOTE: if a second edge node is added, replace this nodeSelector
+          # with a nodeAffinity matching a shared label (e.g. node-role=edge)
+          # and consider switching controller.kind to DaemonSet
+          nodeSelector:
+            kubernetes.io/hostname: saraneth
+          tolerations:
+            - key: node-role
+              operator: Equal
+              value: edge
+              effect: NoSchedule
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
