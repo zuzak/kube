@@ -83,5 +83,4 @@ spec:
           hostname: saraneth
           auth:
             existingSecret: mastodon-redis
-  sources: []
   project: mastodon
