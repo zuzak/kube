@@ -11,22 +11,6 @@ This is a GitOps repository for a personal two-node k3s cluster managed by Argo 
 
 Nodes are connected via Tailscale. The k3s datastore is PostgreSQL on `saraneth`.
 
-## Node configuration (manual, outside Argo CD)
-
-`saraneth` has two taints applied manually via `kubectl`:
-- `CriticalAddonsOnly=true:PreferNoSchedule`
-- `node-role=edge:NoSchedule`
-
-Kubelet reservations are configured on `saraneth` in
-`/etc/rancher/k3s/config.yaml.d/kubelet-reservations.yaml` (leaving ~1670Mi
-allocatable for pods). See README for the file contents.
-
-## Repository structure
-
-- `apps/` — Argo CD Application manifests (the "app of apps" pattern)
-- `kube/` — raw Kubernetes manifests applied directly (storage classes, cluster issuers, etc.)
-- `oauthproxy/` — oauth2-proxy deployment for Prometheus auth
-
 ## Making changes
 
 All application configuration goes through Argo CD. Push to `main` and Argo CD
@@ -34,6 +18,11 @@ will sync automatically. To apply immediately, trigger a sync in the Argo CD UI.
 
 When adding helm values to an Application manifest, place them under
 `spec.source.helm.values`.
+
+Always update the README with a high-level description of the cluster state.
+The target audience is passers-by who are unfamilliar with the cluster itself,
+but it should contain enough information for a systems administrator to recreate
+the configuration on a node from scratch.
 
 ## Pre-commit hooks
 
@@ -43,8 +32,7 @@ These run automatically on commit. To run manually: `pre-commit run --all-files`
 ## Applying node-level changes
 
 Changes to node taints or kubelet config on `saraneth` must be applied manually
-via `ssh z` — they are not managed by Argo CD. Document any such changes in
-the README.
+via `ssh z` — they are not managed by Argo CD.
 
 ## Outstanding work
 
