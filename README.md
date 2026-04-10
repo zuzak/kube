@@ -20,10 +20,24 @@ They&rsquo;re connected together via a [**Tailscale**](https://tailscale.com) me
 virtual private network using the k3s [experimental integration](https://docs.k3s.io/networking/distributed-multicloud#integration-with-the-tailscale-vpn-provider-experimental).
 
 As my VPS already had a PostgreSQL server running, we&rsquo;re using that for
-the cluster datastore. The `sareneth` node has a
+the cluster datastore. The `saraneth` node has a
 `CriticalAddonsOnly=true:PreferNoSchedule` taint to try and push as much work
 onto the Raspberry Pi as possible; the VPS&rsquo;s job is to run the control plane
-and serve the ingress traffic to the outside world.
+and serve the ingress traffic to the outside world. A second taint,
+`node-role=edge:NoSchedule`, prevents non-edge workloads from scheduling on the
+VPS; ingress-nginx explicitly tolerates this taint and is pinned to `saraneth`.
+
+As the VPS runs non-Kubernetes services alongside k3s, kubelet resource
+reservations are configured manually on `saraneth` to prevent Kubernetes from
+consuming the whole host. These should be placed in
+`/etc/rancher/k3s/config.yaml.d/kubelet-reservations.yaml`:
+
+```yaml
+kubelet-arg:
+  - "system-reserved=cpu=500m,memory=1250Mi"
+  - "kube-reserved=cpu=300m,memory=700Mi"
+  - "eviction-hard=memory.available<300Mi,nodefs.available<10%"
+```
 
 ## Projects
 
@@ -82,7 +96,7 @@ However, the storage is cheap and all the hardware is available for my sole use.
 
 As such:
 * having the cluster data store only on the VPS is fine
-* any persistent storage on the Pi is must also be stored on the VPS
+* any persistent storage on the Pi must also be stored on the VPS
 * the node on the VPS has a `CriticalAddonsOnly=true:PreferNoSchedule` taint to
   encourage pods to be scheduled elsewhere if possible, while still allowing it
   to step in if needed (which `…:NoSchedule` would prevent)
