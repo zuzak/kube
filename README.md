@@ -100,6 +100,12 @@ As such:
 * the node on the VPS has a `CriticalAddonsOnly=true:PreferNoSchedule` taint to
   encourage pods to be scheduled elsewhere if possible, while still allowing it
   to step in if needed (which `…:NoSchedule` would prevent)
+* workload charts use a `preferredDuringSchedulingIgnoredDuringExecution` node
+  affinity for the Pi and tolerate the `node-role=edge:NoSchedule` taint so that
+  pods prefer the Pi but can fall back to the VPS when it is unavailable
+* the [**Descheduler**](https://sigs.k8s.io/descheduler) runs every five minutes
+  and evicts pods that no longer satisfy their preferred node affinity, so they
+  rebalance back to the Pi once it comes back online
 
 
 ## Costs

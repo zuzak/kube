@@ -36,8 +36,4 @@ via `ssh z` — they are not managed by Argo CD.
 
 ## Outstanding work
 
-- Add Pi node affinity (`preferredDuringSchedulingIgnoredDuringExecution`) and
-  `node-role=edge` taint toleration to workload helm charts for Pi-first
-  scheduling with saraneth fallback
-- Deploy the Descheduler so pods rebalance back to Pi after a Pi outage
 - Debug Tailscale MagicDNS on the Pi (currently disabled)

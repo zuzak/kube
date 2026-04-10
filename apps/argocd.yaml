@@ -16,6 +16,21 @@ spec:
       valuesObject:
         global:
           domain: argocd.k3s.fluv.net
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: In
+                        values:
+                          - pi.home.arpa
+          tolerations:
+            - key: node-role
+              operator: Equal
+              value: edge
+              effect: NoSchedule
         configs:
           cm:
             # Pulls from the authentik secret in argocd namespace
@@ -31,7 +46,7 @@ spec:
             policy.default: role:readonly
             policy.csv: |
               g, authentik Admins, role:admin
-            scopes: '[groups]' 
+            scopes: '[groups]'
         dex:
           enabled: false
         server:

@@ -29,6 +29,21 @@ spec:
             port: file:///pgcreds/port
             user: file:///pgcreds/username
         worker:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: In
+                        values:
+                          - pi.home.arpa
+          tolerations:
+            - key: node-role
+              operator: Equal
+              value: edge
+              effect: NoSchedule
           metrics:
             enabled: true
             serviceMonitor:
@@ -42,6 +57,21 @@ spec:
               mountPath: /pgcreds
               readOnly: true
         server:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: In
+                        values:
+                          - pi.home.arpa
+          tolerations:
+            - key: node-role
+              operator: Equal
+              value: edge
+              effect: NoSchedule
           metrics:
             enabled: true
             serviceMonitor:

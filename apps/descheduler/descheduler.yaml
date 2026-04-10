@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: descheduler
+  namespace: argocd
+spec:
+  project: descheduler
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: descheduler
+  source:
+    repoURL: https://kubernetes-sigs.github.io/descheduler
+    chart: descheduler
+    targetRevision: 0.*
+    helm:
+      valuesObject:
+        schedule: "*/5 * * * *"
+        deschedulerPolicy:
+          profiles:
+            - name: default
+              pluginConfig:
+                - name: DefaultEvictor
+                - name: RemovePodsViolatingNodeAffinity
+                  args:
+                    nodeAffinityType:
+                      - preferredDuringSchedulingIgnoredDuringExecution
+              plugins:
+                deschedule:
+                  enabled:
+                    - RemovePodsViolatingNodeAffinity
+        affinity:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                preference:
+                  matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: In
+                      values:
+                        - pi.home.arpa
+        tolerations:
+          - key: node-role
+            operator: Equal
+            value: edge
+            effect: NoSchedule
+  syncPolicy:
+    automated:
+      enabled: true
+    syncOptions:
+      - CreateNamespace=true

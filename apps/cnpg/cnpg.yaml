@@ -11,6 +11,23 @@ spec:
     repoURL: https://cloudnative-pg.github.io/charts
     chart: cloudnative-pg
     targetRevision: v0.27.*
+    helm:
+      valuesObject:
+        affinity:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                preference:
+                  matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: In
+                      values:
+                        - pi.home.arpa
+        tolerations:
+          - key: node-role
+            operator: Equal
+            value: edge
+            effect: NoSchedule
   project: cnpg
   syncPolicy:
     syncOptions:
