@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "additionalEnv": {
+      "ARGOCD_OPTS": "--grpc-web --server argocd.k3s.fluv.net --insecure"
+    }
+  }
+}
