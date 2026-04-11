@@ -38,10 +38,13 @@ spec:
               clientSecret: $authentik:client-secret
             oidc.tls.insecure.skip.verify: true
             admin.enabled: false
+            accounts.claude: apiKey
           rbac:
             policy.default: role:readonly
             policy.csv: |
               g, authentik Admins, role:admin
+              p, claude, applications, sync, */*, allow
+              p, claude, applications, get, */*, allow
             scopes: '[groups]'
         dex:
           enabled: false
