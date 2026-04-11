@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: claude
+  namespace: argocd
+spec:
+  description: Claude Code cluster access and integrations
+  destinations:
+    - namespace: claude
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    - https://github.com/zuzak/kube.git
+  clusterResourceWhitelist:
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
