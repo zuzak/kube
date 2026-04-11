@@ -23,9 +23,8 @@ As my VPS already had a PostgreSQL server running, we&rsquo;re using that for
 the cluster datastore. The `saraneth` node has a
 `CriticalAddonsOnly=true:PreferNoSchedule` taint to try and push as much work
 onto the Raspberry Pi as possible; the VPS&rsquo;s job is to run the control plane
-and serve the ingress traffic to the outside world. A second taint,
-`node-role=edge:NoSchedule`, prevents non-edge workloads from scheduling on the
-VPS; ingress-nginx explicitly tolerates this taint and is pinned to `saraneth`.
+and serve the ingress traffic to the outside world.
+Ingress-nginx is pinned to `saraneth` via a nodeSelector.
 
 As the VPS runs non-Kubernetes services alongside k3s, kubelet resource
 reservations are configured manually on `saraneth` to prevent Kubernetes from
@@ -101,8 +100,14 @@ As such:
   encourage pods to be scheduled elsewhere if possible, while still allowing it
   to step in if needed (which `…:NoSchedule` would prevent)
 * workload charts use a `preferredDuringSchedulingIgnoredDuringExecution` node
-  affinity for the Pi and tolerate the `node-role=edge:NoSchedule` taint so that
-  pods prefer the Pi but can fall back to the VPS when it is unavailable
+  affinity for the Pi so that pods prefer the Pi but can fall back to the VPS
+  when it is unavailable
+* two custom PriorityClasses control which workloads actually get resources on
+  the VPS during a Pi outage: `cluster-critical` (value 1000000) for services
+  like Mastodon, Authentik, Argo CD, cert-manager and ingress-nginx, and
+  `cluster-low` (value 100, global default) for everything else. When the VPS
+  runs low on memory, low-priority pods are preempted to make room for critical
+  ones
 * the [**Descheduler**](https://sigs.k8s.io/descheduler) runs every five minutes
   and evicts pods that no longer satisfy their preferred node affinity, so they
   rebalance back to the Pi once it comes back online

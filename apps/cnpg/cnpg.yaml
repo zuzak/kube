@@ -13,6 +13,7 @@ spec:
     targetRevision: v0.27.*
     helm:
       valuesObject:
+        priorityClassName: cluster-critical
         affinity:
           nodeAffinity:
             preferredDuringSchedulingIgnoredDuringExecution:
@@ -23,11 +24,6 @@ spec:
                       operator: In
                       values:
                         - pi.home.arpa
-        tolerations:
-          - key: node-role
-            operator: Equal
-            value: edge
-            effect: NoSchedule
   project: cnpg
   syncPolicy:
     syncOptions:

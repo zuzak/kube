@@ -31,6 +31,7 @@ spec:
     path: '.'
     helm:
       valuesObject:
+        priorityClassName: cluster-critical
         affinity:
           nodeAffinity:
             preferredDuringSchedulingIgnoredDuringExecution:
@@ -41,11 +42,6 @@ spec:
                       operator: In
                       values:
                         - pi.home.arpa
-        tolerations:
-          - key: node-role
-            operator: Equal
-            value: edge
-            effect: NoSchedule
         mastodon:
           local_domain: zuzakistan.com
           web_domain: mastodon.zuzakistan.com

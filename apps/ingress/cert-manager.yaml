@@ -17,6 +17,8 @@ spec:
       values: |
         crds:
           enabled: true
+        global:
+          priorityClassName: cluster-critical
         affinity:
           nodeAffinity:
             preferredDuringSchedulingIgnoredDuringExecution:
@@ -27,11 +29,6 @@ spec:
                       operator: In
                       values:
                         - pi.home.arpa
-        tolerations:
-          - key: node-role
-            operator: Equal
-            value: edge
-            effect: NoSchedule
         webhook:
           affinity:
             nodeAffinity:
@@ -43,11 +40,6 @@ spec:
                         operator: In
                         values:
                           - pi.home.arpa
-          tolerations:
-            - key: node-role
-              operator: Equal
-              value: edge
-              effect: NoSchedule
         cainjector:
           affinity:
             nodeAffinity:
@@ -59,11 +51,6 @@ spec:
                         operator: In
                         values:
                           - pi.home.arpa
-          tolerations:
-            - key: node-role
-              operator: Equal
-              value: edge
-              effect: NoSchedule
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager

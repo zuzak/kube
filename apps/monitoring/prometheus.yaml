@@ -52,11 +52,6 @@ spec:
                           operator: In
                           values:
                             - pi.home.arpa
-            tolerations:
-              - key: node-role
-                operator: Equal
-                value: edge
-                effect: NoSchedule
             storageSpec:
               volumeClaimTemplate:
                 spec:
@@ -77,11 +72,6 @@ spec:
                         operator: In
                         values:
                           - pi.home.arpa
-          tolerations:
-            - key: node-role
-              operator: Equal
-              value: edge
-              effect: NoSchedule
           admissionWebhooks:
             certManager:
               enabled: true

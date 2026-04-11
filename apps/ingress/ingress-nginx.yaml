@@ -21,11 +21,7 @@ spec:
           # and consider switching controller.kind to DaemonSet
           nodeSelector:
             kubernetes.io/hostname: saraneth
-          tolerations:
-            - key: node-role
-              operator: Equal
-              value: edge
-              effect: NoSchedule
+          priorityClassName: cluster-critical
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx

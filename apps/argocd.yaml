@@ -15,6 +15,7 @@ spec:
     helm:
       valuesObject:
         global:
+          priorityClassName: cluster-critical
           domain: argocd.k3s.fluv.net
           affinity:
             nodeAffinity:
@@ -26,11 +27,6 @@ spec:
                         operator: In
                         values:
                           - pi.home.arpa
-          tolerations:
-            - key: node-role
-              operator: Equal
-              value: edge
-              effect: NoSchedule
         configs:
           cm:
             # Pulls from the authentik secret in argocd namespace

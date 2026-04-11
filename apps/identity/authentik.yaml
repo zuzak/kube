@@ -29,6 +29,7 @@ spec:
             port: file:///pgcreds/port
             user: file:///pgcreds/username
         worker:
+          priorityClassName: cluster-critical
           affinity:
             nodeAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
@@ -39,11 +40,6 @@ spec:
                         operator: In
                         values:
                           - pi.home.arpa
-          tolerations:
-            - key: node-role
-              operator: Equal
-              value: edge
-              effect: NoSchedule
           metrics:
             enabled: true
             serviceMonitor:
@@ -57,6 +53,7 @@ spec:
               mountPath: /pgcreds
               readOnly: true
         server:
+          priorityClassName: cluster-critical
           affinity:
             nodeAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
@@ -67,11 +64,6 @@ spec:
                         operator: In
                         values:
                           - pi.home.arpa
-          tolerations:
-            - key: node-role
-              operator: Equal
-              value: edge
-              effect: NoSchedule
           metrics:
             enabled: true
             serviceMonitor:
