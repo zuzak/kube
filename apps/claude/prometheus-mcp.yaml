@@ -18,6 +18,14 @@ spec:
           disableLinks: "true"
         mcp:
           transport: sse
+        livenessProbe:
+          httpGet:
+            path: /sse
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /sse
+            port: http
         resources:
           requests:
             cpu: 10m
