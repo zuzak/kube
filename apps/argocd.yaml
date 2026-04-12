@@ -45,6 +45,7 @@ spec:
               g, authentik Admins, role:admin
               p, claude, applications, sync, */*, allow
               p, claude, applications, get, */*, allow
+              p, claude, applications, update, claude/*, allow
             scopes: '[groups]'
         dex:
           enabled: false
