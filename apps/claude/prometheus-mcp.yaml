@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-mcp
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: claude
+  source:
+    repoURL: oci://ghcr.io/pab1it0/charts
+    chart: prometheus-mcp-server
+    targetRevision: 1.0.0
+    helm:
+      valuesObject:
+        env:
+          PROMETHEUS_URL: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+          PROMETHEUS_MCP_SERVER_TRANSPORT: sse
+          PROMETHEUS_MCP_BIND_HOST: "0.0.0.0"
+          PROMETHEUS_MCP_BIND_PORT: "8080"
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+  destination:
+    namespace: claude
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false
