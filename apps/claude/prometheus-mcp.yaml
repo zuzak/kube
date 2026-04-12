@@ -8,16 +8,16 @@ metadata:
 spec:
   project: claude
   source:
-    repoURL: oci://ghcr.io/pab1it0/charts
-    chart: prometheus-mcp-server
-    targetRevision: 1.0.0
+    repoURL: https://github.com/pab1it0/prometheus-mcp-server.git
+    path: charts/prometheus-mcp-server
+    targetRevision: HEAD
     helm:
       valuesObject:
-        env:
-          PROMETHEUS_URL: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
-          PROMETHEUS_MCP_SERVER_TRANSPORT: sse
-          PROMETHEUS_MCP_BIND_HOST: "0.0.0.0"
-          PROMETHEUS_MCP_BIND_PORT: "8080"
+        prometheus:
+          url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+          disableLinks: "true"
+        mcp:
+          transport: sse
         resources:
           requests:
             cpu: 10m

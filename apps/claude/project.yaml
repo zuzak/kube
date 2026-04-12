@@ -10,7 +10,7 @@ spec:
       server: https://kubernetes.default.svc
   sourceRepos:
     - https://github.com/zuzak/kube.git
-    - oci://ghcr.io/pab1it0/charts
+    - https://github.com/pab1it0/prometheus-mcp-server.git
   clusterResourceWhitelist:
     - group: ""
       kind: Namespace
