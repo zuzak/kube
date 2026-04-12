@@ -12,18 +12,18 @@ spec:
     path: charts/prometheus-mcp-server
     targetRevision: HEAD
     helm:
-      valuesObject:
+      values: |
         prometheus:
           url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
           disableLinks: "true"
         mcp:
           transport: sse
         livenessProbe:
-          httpGet: null
+          httpGet: ~
           tcpSocket:
             port: http
         readinessProbe:
-          httpGet: null
+          httpGet: ~
           tcpSocket:
             port: http
         resources:
