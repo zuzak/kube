@@ -19,9 +19,11 @@ spec:
         mcp:
           transport: sse
         livenessProbe:
+          httpGet: null
           tcpSocket:
             port: http
         readinessProbe:
+          httpGet: null
           tcpSocket:
             port: http
         resources:
