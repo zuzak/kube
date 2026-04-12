@@ -38,3 +38,4 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=false
+      - Replace=true
