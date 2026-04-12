@@ -10,6 +10,7 @@ spec:
       server: https://kubernetes.default.svc
   sourceRepos:
     - https://github.com/zuzak/kube.git
+    - oci://ghcr.io/pab1it0/charts
   clusterResourceWhitelist:
     - group: ""
       kind: Namespace
