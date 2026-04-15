@@ -34,6 +34,3 @@ These run automatically on commit. To run manually: `pre-commit run --all-files`
 Changes to node taints or kubelet config on `saraneth` must be applied manually
 via `ssh z` — they are not managed by Argo CD.
 
-## Outstanding work
-
-- Debug Tailscale MagicDNS on the Pi (currently disabled)
