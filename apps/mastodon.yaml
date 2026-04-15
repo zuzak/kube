@@ -68,6 +68,20 @@ spec:
           metrics:
             prometheus:
               enable: true
+          web:
+            resources:
+              requests:
+                memory: 400Mi
+                cpu: 100m
+              limits:
+                memory: 800Mi
+          sidekiq:
+            resources:
+              requests:
+                memory: 300Mi
+                cpu: 100m
+              limits:
+                memory: 600Mi
         extraEnvVars:
           S3_FORCE_SINGLE_REQUEST: true
         ingress:
