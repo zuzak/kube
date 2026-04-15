@@ -1,0 +1,22 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  "argocd": {
+    "fileMatch": ["^apps/.*\\.ya?ml$"]
+  },
+  "kubernetes": {
+    "fileMatch": ["(^|/).*\\.ya?ml$"]
+  },
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["renovate", "major-upgrade"]
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false,
+      "labels": ["renovate"]
+    }
+  ]
+}
