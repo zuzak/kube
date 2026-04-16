@@ -17,6 +17,12 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: claude-router-mcp
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: router-mcp
+      jsonPointers:
+        - /data
   syncPolicy:
     automated:
       prune: true
