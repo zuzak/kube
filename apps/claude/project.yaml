@@ -8,9 +8,12 @@ spec:
   destinations:
     - namespace: claude
       server: https://kubernetes.default.svc
+    - namespace: 'claude-*'
+      server: https://kubernetes.default.svc
   sourceRepos:
     - https://github.com/zuzak/kube.git
     - https://github.com/pab1it0/prometheus-mcp-server.git
+    - https://github.com/zuzak/router-mcp
   clusterResourceWhitelist:
     - group: ""
       kind: Namespace

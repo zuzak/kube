@@ -16,36 +16,72 @@ metadata:
     kubernetes.io/service-account.name: claude
 type: kubernetes.io/service-account-token
 ---
+# Cluster-wide read access — all resources, all namespaces.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: claude
+  name: claude-read
 rules:
-  # Read everything cluster-wide, including Secrets
   - apiGroups: ["*"]
     resources: ["*"]
     verbs: ["get", "list", "watch"]
-  # Read non-resource URLs (e.g. /healthz, /metrics)
   - nonResourceURLs: ["*"]
     verbs: ["get"]
-  # Write Secrets — for operational credential management (rotation,
-  # bootstrapping) that should not be committed to git
-  - apiGroups: [""]
-    resources: ["secrets"]
-    verbs: ["create", "update", "patch", "delete"]
-  # Pod exec and port-forward for live debugging
-  - apiGroups: [""]
-    resources: ["pods/exec", "pods/portforward"]
-    verbs: ["create"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: claude
+  name: claude-read
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
+  name: claude-read
+subjects:
+  - kind: ServiceAccount
+    name: claude
+    namespace: claude
+---
+# Write access scoped to individual namespaces via RoleBindings.
+# Claude can write Secrets (credential rotation) and exec into pods
+# (live debugging) only in namespaces that carry a RoleBinding for
+# this ClusterRole.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: claude-namespace-admin
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create", "update", "patch", "delete"]
+  - apiGroups: [""]
+    resources: ["pods/exec", "pods/portforward"]
+    verbs: ["create"]
+---
+# Grant write access in the claude namespace itself.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
   name: claude
+  namespace: claude
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: claude-namespace-admin
+subjects:
+  - kind: ServiceAccount
+    name: claude
+    namespace: claude
+---
+# Grant write access in the claude-router-mcp namespace.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: claude
+  namespace: claude-router-mcp
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: claude-namespace-admin
 subjects:
   - kind: ServiceAccount
     name: claude
