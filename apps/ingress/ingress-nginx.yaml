@@ -22,6 +22,10 @@ spec:
           nodeSelector:
             kubernetes.io/hostname: saraneth
           priorityClassName: cluster-critical
+          metrics:
+            enabled: true
+            serviceMonitor:
+              enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
