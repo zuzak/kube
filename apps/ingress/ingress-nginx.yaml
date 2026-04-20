@@ -26,6 +26,8 @@ spec:
             enabled: true
             serviceMonitor:
               enabled: true
+          service:
+            externalTrafficPolicy: Local
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
