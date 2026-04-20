@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claude-grocy
+  namespace: claude-grocy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claude-grocy
+  template:
+    metadata:
+      labels:
+        app: claude-grocy
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - pi.home.arpa
+      containers:
+        - name: claude-grocy
+          image: ghcr.io/saya6k/mcp-grocy-api:v1.4.13
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: GROCY_BASE_URL
+              value: "http://grocy.grocy.svc.cluster.local"
+            - name: GROCY_APIKEY_VALUE
+              valueFrom:
+                secretKeyRef:
+                  name: grocy-api-key
+                  key: GROCY_APIKEY_VALUE
+            - name: ENABLE_HTTP_SERVER
+              value: "true"
+            - name: HTTP_SERVER_PORT
+              value: "8080"
+            - name: GROCY_ENABLE_SSL_VERIFY
+              value: "false"
+          readinessProbe:
+            httpGet:
+              path: /mcp
+              port: 8080
+            initialDelaySeconds: 15

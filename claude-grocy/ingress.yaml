@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: claude-grocy
+  namespace: claude-grocy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: Authentication Required
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: grocy.mcp.k3s.fluv.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: claude-grocy
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - grocy.mcp.k3s.fluv.net
+      secretName: grocy-mcp-k3s-fluv-net-tls
