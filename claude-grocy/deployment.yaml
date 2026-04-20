@@ -27,6 +27,7 @@ spec:
         - name: claude-grocy
           image: ghcr.io/saya6k/mcp-grocy-api:1.4.13
           imagePullPolicy: IfNotPresent
+          command: ["node", "build/index.js"]
           ports:
             - containerPort: 8080
           env:
