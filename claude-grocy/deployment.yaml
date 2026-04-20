@@ -25,7 +25,7 @@ spec:
                       - pi.home.arpa
       containers:
         - name: claude-grocy
-          image: ghcr.io/saya6k/mcp-grocy-api:v1.4.13
+          image: ghcr.io/saya6k/mcp-grocy-api:1.4.13
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
