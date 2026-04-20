@@ -25,8 +25,8 @@ spec:
                       - pi.home.arpa
       containers:
         - name: claude-grocy
-          image: ghcr.io/saya6k/mcp-grocy-api:1.4.13
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/zuzak/mcp-grocy-api:latest
+          imagePullPolicy: Always
           command: ["node", "build/index.js"]
           ports:
             - containerPort: 8080
@@ -46,16 +46,8 @@ spec:
               value: "false"
             - name: REST_RESPONSE_SIZE_LIMIT
               value: "10485760"
-          volumeMounts:
-            - name: http-server-patch
-              mountPath: /app/build/server/http-server.js
-              subPath: http-server.js
           readinessProbe:
             httpGet:
               path: /
               port: 8080
             initialDelaySeconds: 15
-      volumes:
-        - name: http-server-patch
-          configMap:
-            name: grocy-mcp-http-server-patch
