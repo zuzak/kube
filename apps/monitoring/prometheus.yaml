@@ -25,20 +25,14 @@ spec:
         prometheus:
           ingress:
             enabled: true
-            ingressClassName: nginx
+            ingressClassName: tailscale
             pathType: ImplementationSpecific
             paths: [ / ]
-            annotations:
-              cert-manager.io/cluster-issuer: letsencrypt-production
-              nginx.ingress.kubernetes.io/auth-url: "https://prometheus.k3s.fluv.net/oauth2/auth"
-              nginx.ingress.kubernetes.io/auth-signin: "https://prometheus.k3s.fluv.net/oauth2/start"
-              nginx.ingress.kubernetes.io/auth-signin-redirect-param: rd
             hosts:
-              - prometheus.k3s.fluv.net
+              - prometheus.gentoo-mine.ts.net
             tls:
-              - secretName: prometheus-k3s-fluv-net-tls
-                hosts:
-                  - prometheus.k3s.fluv.net
+              - hosts:
+                  - prometheus.gentoo-mine.ts.net
           prometheusSpec:
             podMonitorSelectorNilUsesHelmValues: false
             serviceMonitorSelectorNilUsesHelmValues: false
