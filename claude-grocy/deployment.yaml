@@ -46,6 +46,6 @@ spec:
               value: "false"
           readinessProbe:
             httpGet:
-              path: /mcp
+              path: /
               port: 8080
             initialDelaySeconds: 15
