@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: grocy
   namespace: grocy
+  annotations:
+    tailscale.com/hostname: grocy
 spec:
   ingressClassName: tailscale
   tls:
