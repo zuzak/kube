@@ -37,11 +37,14 @@ spec:
             - name: TZ
               value: Europe/London
           envFrom:
-          - configMapRef:
-            name: grocy-config
+            - configMapRef:
+                name: grocy-config
           volumeMounts:
             - name: grocy-config
               mountPath: /config
+            - name: grocy-php-config
+              mountPath: /config/php/www2.conf
+              subPath: www2.conf
           livenessProbe:
             httpGet:
               path: /
@@ -60,3 +63,6 @@ spec:
         - name: grocy-config
           persistentVolumeClaim:
             claimName: grocy-config
+        - name: grocy-php-config
+          configMap:
+            name: grocy-php-config

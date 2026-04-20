@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grocy-php-config
+  namespace: grocy
+data:
+  www2.conf: |
+    ; Edit this file to override www.conf and php-fpm.conf directives and restart the container
+
+    ; Pool name
+    [www]
+    clear_env = no
