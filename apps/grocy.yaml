@@ -11,8 +11,8 @@ spec:
     namespace: grocy
   project: default
   source:
-    path: apps/grocy
-    repoURL: https://github.com/zuzak/kube.git
+    path: grocy
+    repoURL: https://github.com/zuzak/kube.git # this repo!
     targetRevision: HEAD
     directory:
       recurse: true
