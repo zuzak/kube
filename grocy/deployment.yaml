@@ -36,6 +36,9 @@ spec:
               value: "1000"
             - name: TZ
               value: Europe/London
+          envFrom:
+          - configMapRef:
+            name: grocy-config
           volumeMounts:
             - name: grocy-config
               mountPath: /config
