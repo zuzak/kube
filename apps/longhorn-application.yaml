@@ -24,16 +24,10 @@ spec:
             serviceMonitor:
               enabled: true
           ingress:
-            enabled: false
+            enabled: true
             tls: true
-            ingressClassName: nginx
-            annotations:
-              cert-manager.io/cluster-issuer: "letsencrypt-staging"
-              nginx.ingress.kubernetes.io/auth-signin: >-
-                https://authentik-server.authentik.svc.cluster.local/outpost.goauthentik.io/auth/longhorn
-              nginx.ingress.kubernetes.io/auth-signin-redirect-param: rd
-            host: longhorn.k3s.fluv.net
-            tlsSecret: longhorn-k3s-fluv-net-tls
+            ingressClassName: tailscale
+            host: longhorn.gentoo-mine.ts.net
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
