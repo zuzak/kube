@@ -60,6 +60,31 @@ rules:
     resources: ["deployments/scale", "statefulsets/scale"]
     verbs: ["get", "create", "update", "patch"]
 ---
+# Sync ArgoCD applications — allows triggering syncs without modifying app spec.
+# Scoped to the argocd namespace only via RoleBinding below.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: claude-argocd-sync
+rules:
+  - apiGroups: ["argoproj.io"]
+    resources: ["applications"]
+    verbs: ["patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: claude-argocd-sync
+  namespace: argocd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: claude-argocd-sync
+subjects:
+  - kind: ServiceAccount
+    name: claude
+    namespace: claude
+---
 # Grant write access in the claude namespace itself.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
