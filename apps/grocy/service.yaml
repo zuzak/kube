@@ -3,11 +3,8 @@ kind: Service
 metadata:
   name: grocy
   namespace: grocy
-  annotations:
-    tailscale.com/hostname: grocy
 spec:
-  type: LoadBalancer
-  loadBalancerClass: tailscale
+  type: ClusterIP
   selector:
     app: grocy
   ports:
