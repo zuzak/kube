@@ -12,9 +12,6 @@ metadata:
 rules:
   - apiGroups: ["apps"]
     resources: ["deployments"]
-    verbs: ["get"]
-  - apiGroups: ["apps"]
-    resources: ["deployments/scale"]
     verbs: ["get", "patch", "update"]
   - apiGroups: [""]
     resources: ["pods"]
@@ -59,7 +56,5 @@ spec:
                 - -c
                 - |
                   set -e
-                  kubectl scale deployment/claude-grocy -n claude-grocy --replicas=0
-                  kubectl wait --for=delete pod -l app=claude-grocy -n claude-grocy --timeout=60s || true
-                  kubectl scale deployment/claude-grocy -n claude-grocy --replicas=1
-                  kubectl wait --for=condition=Ready pod -l app=claude-grocy -n claude-grocy --timeout=120s
+                  kubectl rollout restart deployment/claude-grocy -n claude-grocy
+                  kubectl rollout status deployment/claude-grocy -n claude-grocy --timeout=120s
