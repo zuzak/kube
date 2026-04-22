@@ -1,21 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vestibule
+  name: vestibule-mcp
   namespace: claude-vestibule
   annotations:
-    # Vestibule must be Ready before vestibule-mcp starts, because the MCP
-    # fetches /_manifest at startup. Vestibule is wave 0; the MCP is wave 1.
-    argocd.argoproj.io/sync-wave: "0"
+    # Depends on vestibule being Ready — see vestibule deployment.
+    argocd.argoproj.io/sync-wave: "1"
 spec:
+  # Single replica. FastMCP is configured stateless_http=True so this is
+  # not a hard session-state requirement, but every MCP deployment in
+  # this cluster is single-replica and the startup manifest fetch makes
+  # parallel replicas pointless.
   replicas: 1
   selector:
     matchLabels:
-      app: vestibule
+      app: vestibule-mcp
   template:
     metadata:
       labels:
-        app: vestibule
+        app: vestibule-mcp
     spec:
       affinity:
         nodeAffinity:
@@ -28,43 +31,36 @@ spec:
                     values:
                       - pi.home.arpa
       containers:
-        - name: vestibule
-          image: ghcr.io/zuzak/vestibule:main
+        - name: vestibule-mcp
+          image: ghcr.io/zuzak/vestibule-mcp:main
           imagePullPolicy: Always
           env:
-            - name: VESTIBULE_CONFIG
-              value: /etc/vestibule/config.yaml
+            - name: VESTIBULE_URL
+              value: http://vestibule.claude-vestibule.svc.cluster.local:8080
           ports:
             - name: http
               containerPort: 8080
             - name: metrics
               containerPort: 9090
-          volumeMounts:
-            - name: config
-              mountPath: /etc/vestibule
-              readOnly: true
           readinessProbe:
             httpGet:
               path: /healthz
               port: http
-            initialDelaySeconds: 3
+            # The MCP blocks startup on the manifest fetch (plus a few
+            # retry attempts if vestibule isn't ready yet). Give it
+            # headroom before declaring it unhealthy.
+            initialDelaySeconds: 5
             periodSeconds: 10
+            failureThreshold: 6
           livenessProbe:
             httpGet:
               path: /healthz
               port: http
-            initialDelaySeconds: 15
+            initialDelaySeconds: 30
             periodSeconds: 30
           resources:
             requests:
               cpu: 10m
-              memory: 32Mi
+              memory: 64Mi
             limits:
-              memory: 128Mi
-      volumes:
-        - name: config
-          secret:
-            secretName: vestibule-config
-            items:
-              - key: config.yaml
-                path: config.yaml
+              memory: 256Mi
