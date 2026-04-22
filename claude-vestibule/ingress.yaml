@@ -5,7 +5,7 @@ metadata:
   namespace: claude-vestibule
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
-    nginx.ingress.kubernetes.io/whitelist-source-range: "160.79.104.0/21"
+    nginx.ingress.kubernetes.io/whitelist-source-range: "160.79.104.0/21,34.162.0.0/16" # anthropic egress + undocumented GCP block that requests come from regardless
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
 spec:
   ingressClassName: nginx
