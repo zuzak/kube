@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vestibule
+  namespace: claude-vestibule
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vestibule
+  template:
+    metadata:
+      labels:
+        app: vestibule
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - pi.home.arpa
+      containers:
+        - name: vestibule
+          image: ghcr.io/zuzak/vestibule:main
+          imagePullPolicy: Always
+          env:
+            - name: VESTIBULE_CONFIG
+              value: /etc/vestibule/config.yaml
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: metrics
+              containerPort: 9090
+          volumeMounts:
+            - name: config
+              mountPath: /etc/vestibule
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+      volumes:
+        - name: config
+          secret:
+            secretName: vestibule-config
+            items:
+              - key: config.yaml
+                path: config.yaml
