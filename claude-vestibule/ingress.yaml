@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vestibule
+  namespace: claude-vestibule
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    # SAFETY DEFAULT: restricts inbound to loopback only. Replace with the
+    # real allowlist (Anthropic web_fetch egress ranges + operator Tailscale
+    # CIDR) before the proxy becomes usable. See README.md in this folder.
+    # The inbound apikey check is a secondary layer; this is the primary one.
+    nginx.ingress.kubernetes.io/whitelist-source-range: "127.0.0.1/32"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: vestibule.mcp.k3s.fluv.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vestibule
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - vestibule.mcp.k3s.fluv.net
+      secretName: vestibule-mcp-k3s-fluv-net-tls
