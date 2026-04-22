@@ -5,11 +5,7 @@ metadata:
   namespace: claude-vestibule
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # SAFETY DEFAULT: restricts inbound to loopback only. Replace with the
-    # real allowlist (Anthropic web_fetch egress ranges + operator Tailscale
-    # CIDR) before the proxy becomes usable. See README.md in this folder.
-    # The inbound apikey check is a secondary layer; this is the primary one.
-    nginx.ingress.kubernetes.io/whitelist-source-range: "127.0.0.1/32"
+    nginx.ingress.kubernetes.io/whitelist-source-range: "160.79.104.0/21"
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
 spec:
   ingressClassName: nginx
