@@ -10,6 +10,16 @@ spec:
     server: https://kubernetes.default.svc
     namespace: monitoring
   project: monitoring
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 5m
   source:
     path: charts/kube-prometheus-stack
     repoURL: https://github.com/prometheus-community/helm-charts.git
