@@ -25,16 +25,11 @@ spec:
     - host: vestibule-mcp.mcp.k3s.fluv.net
       http:
         paths:
-          # Only /mcp is routed — :9090 (metrics) stays cluster-internal.
+          # Only /mcp is routed — :9090 (metrics) stays cluster-internal,
+          # and /healthz is hit by the kubelet on the pod IP, not
+          # through the ingress.
           - path: /mcp
             pathType: Prefix
-            backend:
-              service:
-                name: vestibule-mcp
-                port:
-                  name: http
-          - path: /healthz
-            pathType: Exact
             backend:
               service:
                 name: vestibule-mcp
