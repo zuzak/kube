@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vestibule-mcp
+  namespace: claude-vestibule
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    # Basic auth at the ingress — matches the pattern used by claude-grocy.
+    # The vestibule-mcp-auth Secret (htpasswd) is applied out-of-band; it
+    # is NOT committed to this repo. See README.
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: vestibule-mcp-auth
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+    # Streamable HTTP MCP needs chunked responses unbuffered and long
+    # read/write timeouts. With buffering on, the client waits until the
+    # response is fully received at the ingress before seeing anything,
+    # which stalls streaming tool responses. 300s matches the
+    # conservative cap used elsewhere in this cluster.
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: vestibule-mcp.mcp.k3s.fluv.net
+      http:
+        paths:
+          # Only /mcp is routed — :9090 (metrics) stays cluster-internal.
+          - path: /mcp
+            pathType: Prefix
+            backend:
+              service:
+                name: vestibule-mcp
+                port:
+                  name: http
+          - path: /healthz
+            pathType: Exact
+            backend:
+              service:
+                name: vestibule-mcp
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - vestibule-mcp.mcp.k3s.fluv.net
+      secretName: vestibule-mcp-mcp-k3s-fluv-net-tls
