@@ -7,10 +7,10 @@ metadata:
     # Depends on vestibule being Ready — see vestibule deployment.
     argocd.argoproj.io/sync-wave: "1"
 spec:
-  # Single replica. FastMCP is configured stateless_http=True so this is
-  # not a hard session-state requirement, but every MCP deployment in
-  # this cluster is single-replica and the startup manifest fetch makes
-  # parallel replicas pointless.
+  # Single replica is load-bearing: FastMCP keeps per-client session
+  # state in memory. Multiple replicas would serve incompatible sessions
+  # depending on which pod a request hits. See claude-grocy — which
+  # learned this the hard way — for the matching pattern.
   replicas: 1
   selector:
     matchLabels:
