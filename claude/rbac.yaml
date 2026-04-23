@@ -104,3 +104,48 @@ subjects:
   - kind: ServiceAccount
     name: claude
     namespace: claude
+---
+# Grant write access in the claude-waitrose-mcp namespace.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: claude
+  namespace: claude-waitrose-mcp
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: claude-namespace-admin
+subjects:
+  - kind: ServiceAccount
+    name: claude
+    namespace: claude
+---
+# Grant write access in the claude-asda-mcp namespace.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: claude
+  namespace: claude-asda-mcp
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: claude-namespace-admin
+subjects:
+  - kind: ServiceAccount
+    name: claude
+    namespace: claude
+---
+# Grant write access in the claude-vestibule namespace.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: claude
+  namespace: claude-vestibule
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: claude-namespace-admin
+subjects:
+  - kind: ServiceAccount
+    name: claude
+    namespace: claude
