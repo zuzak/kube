@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: waitrose-mcp
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: claude
+  source:
+    repoURL: https://github.com/zuzak/kube.git
+    path: claude-waitrose-mcp
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  destination:
+    namespace: claude-waitrose-mcp
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
