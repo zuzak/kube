@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: asda-mcp
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: claude
+  source:
+    repoURL: https://github.com/zuzak/kube.git
+    path: claude-asda-mcp
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  destination:
+    namespace: claude-asda-mcp
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
