@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: waitrose-mcp
+  namespace: claude-waitrose-mcp
+spec:
+  selector:
+    app: waitrose-mcp
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

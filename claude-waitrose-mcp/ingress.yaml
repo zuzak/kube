@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: waitrose-mcp
+  namespace: claude-waitrose-mcp
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    # Streamable HTTP MCP needs chunked responses unbuffered and longer
+    # read/write timeouts. Same pattern as claude-vestibule and claude-grocy.
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: waitrose.mcp.k3s.fluv.net
+      http:
+        paths:
+          # /mcp and /healthz are the public surface. The MCP server also
+          # exposes "/" for a JSON banner, but keeping the ingress narrow
+          # mirrors claude-vestibule — /healthz is exposed so acceptance
+          # checks and probes outside the cluster can verify the pod.
+          - path: /mcp
+            pathType: Prefix
+            backend:
+              service:
+                name: waitrose-mcp
+                port:
+                  name: http
+          - path: /healthz
+            pathType: Exact
+            backend:
+              service:
+                name: waitrose-mcp
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - waitrose.mcp.k3s.fluv.net
+      secretName: waitrose-mcp-k3s-fluv-net-tls

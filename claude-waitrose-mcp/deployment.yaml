@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: waitrose-mcp
+  namespace: claude-waitrose-mcp
+spec:
+  # Single replica is load-bearing: the MCP SDK's StreamableHTTP transport
+  # keeps per-session state in memory. Multiple replicas would serve
+  # incompatible sessions depending on which pod a request hits. Same
+  # constraint as claude-grocy and claude-vestibule.
+  replicas: 1
+  selector:
+    matchLabels:
+      app: waitrose-mcp
+  template:
+    metadata:
+      labels:
+        app: waitrose-mcp
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - pi.home.arpa
+      containers:
+        - name: waitrose-mcp
+          image: ghcr.io/zuzak/waitrose-mcp:main
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
