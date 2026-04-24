@@ -1,0 +1,128 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    kubernetes.io/description: |
+      Grafana exposed on the tailnet (`grafana.gentoo-mine.ts.net`) with
+      anonymous Admin — no auth, no public ingress. Datasources for Loki and
+      the existing Prometheus are bootstrapped in values; the sidecar also
+      watches ConfigMaps labelled `grafana_datasource=1` across all
+      namespaces, so additional Prometheuses/Lokis can register themselves
+      by dropping a labelled ConfigMap in their own namespace.
+spec:
+  project: logging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: grafana
+  source:
+    repoURL: https://github.com/grafana-community/helm-charts.git
+    path: charts/grafana
+    targetRevision: HEAD
+    helm:
+      valuesObject:
+        priorityClassName: cluster-low
+        nodeSelector:
+          kubernetes.io/hostname: pi.home.arpa
+        replicas: 1
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 512Mi
+        persistence:
+          enabled: true
+          type: pvc
+          storageClassName: longhorn
+          size: 2Gi
+          accessModes:
+            - ReadWriteOnce
+        ingress:
+          enabled: true
+          ingressClassName: tailscale
+          annotations:
+            tailscale.com/hostname: grafana
+          hosts:
+            - grafana
+          tls:
+            - hosts:
+                - grafana
+        grafana.ini:
+          analytics:
+            check_for_updates: false
+            reporting_enabled: false
+          auth:
+            disable_login_form: true
+            disable_signout_menu: true
+          auth.anonymous:
+            enabled: true
+            org_role: Admin
+          auth.basic:
+            enabled: false
+          users:
+            default_theme: dark
+            viewers_can_edit: true
+          security:
+            allow_embedding: true
+          log:
+            mode: console
+            level: info
+          server:
+            root_url: "https://grafana.gentoo-mine.ts.net/"
+        admin:
+          existingSecret: ""
+        datasources:
+          datasources.yaml:
+            apiVersion: 1
+            datasources:
+              - name: Loki
+                uid: loki
+                type: loki
+                access: proxy
+                url: http://loki.loki.svc.cluster.local:3100
+                isDefault: false
+                jsonData:
+                  maxLines: 5000
+              - name: Prometheus
+                uid: prometheus
+                type: prometheus
+                access: proxy
+                url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+                isDefault: true
+                jsonData:
+                  timeInterval: 30s
+        sidecar:
+          datasources:
+            enabled: true
+            label: grafana_datasource
+            labelValue: "1"
+            searchNamespace: ALL
+            resource: configmap
+            reloadURL: "http://127.0.0.1:3000/api/admin/provisioning/datasources/reload"
+          dashboards:
+            enabled: true
+            label: grafana_dashboard
+            labelValue: "1"
+            searchNamespace: ALL
+            folder: /tmp/dashboards
+            folderAnnotation: grafana_folder
+            provider:
+              foldersFromFilesStructure: true
+        serviceMonitor:
+          enabled: true
+          labels:
+            release: prometheus
+        service:
+          type: ClusterIP
+        testFramework:
+          enabled: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

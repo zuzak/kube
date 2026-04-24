@@ -68,6 +68,23 @@ be replicated in both nodes. As I want to run some applications that have heavy
 read/write activity, I have configured a StorageClass that removes SD cards from
 the pool where needed.
 
+### Observability
+
+Cluster metrics come from [**Prometheus**](https://prometheus.io/) via the
+[`kube-prometheus-stack`](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+chart. Logs are collected cluster-wide by [**Grafana Alloy**](https://grafana.com/docs/alloy/)
+running as a DaemonSet, which tails `/var/log/pods` on each node and ships the
+streams to a single-binary [**Grafana Loki**](https://grafana.com/oss/loki/)
+instance pinned to the Pi. Both are surfaced through a
+[**Grafana**](https://grafana.com/) instance exposed on the tailnet at
+`grafana.gentoo-mine.ts.net` with anonymous admin access — no login, no public
+ingress; Tailscale ACLs are the access boundary.
+
+A `logging-alerts` PrometheusRule covers the bits that would silently rot:
+Loki PVC headroom, stalled ingest, dropped write bytes, and per-node Alloy
+coverage. All logging components run at `cluster-low` priority so they yield
+to end-user workloads under memory pressure on `saraneth`.
+
 ## End-user services
 
 We&rsquo;re running a single-user [**Mastodon**](https://joinmastodon.org/) instance on
