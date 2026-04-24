@@ -17,7 +17,7 @@ spec:
     helm:
       valuesObject:
         crds:
-          enabled: false # configured elsewhere in this repo
+          enabled: false
         alertmanager:
           enabled: false
         grafana:
@@ -34,7 +34,14 @@ spec:
               - hosts:
                   - prometheus.gentoo-mine.ts.net
           prometheusSpec:
-            replicas: 0 # scaled to zero pending investigation of zuzak/kube#111
+            replicas: 0
+            priorityClassName: cluster-low
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                memory: 1Gi
             podMonitorSelectorNilUsesHelmValues: false
             serviceMonitorSelectorNilUsesHelmValues: false
             affinity:
@@ -57,6 +64,7 @@ spec:
                     requests:
                       storage: 50Gi
         prometheusOperator:
+          priorityClassName: cluster-low
           affinity:
             nodeAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
