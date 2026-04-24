@@ -12,6 +12,11 @@ metadata:
       watches ConfigMaps labelled `grafana_datasource=1` across all
       namespaces, so additional Prometheuses/Lokis can register themselves
       by dropping a labelled ConfigMap in their own namespace.
+
+      Database: CNPG Postgres cluster `grafana-postgres` (provisioned via
+      `kube/pgclusters/grafana.yaml`). The Grafana pod has no persistence
+      of its own — all state lives in Postgres, so Deployment restarts are
+      cheap and RollingUpdate is safe.
 spec:
   project: logging
   destination:
@@ -27,8 +32,6 @@ spec:
         nodeSelector:
           kubernetes.io/hostname: pi.home.arpa
         replicas: 1
-        deploymentStrategy:
-          type: Recreate
         resources:
           requests:
             cpu: 50m
@@ -36,12 +39,12 @@ spec:
           limits:
             memory: 512Mi
         persistence:
-          enabled: true
-          type: pvc
-          storageClassName: longhorn
-          size: 2Gi
-          accessModes:
-            - ReadWriteOnce
+          enabled: false
+        envValueFrom:
+          GF_DATABASE_PASSWORD:
+            secretKeyRef:
+              name: grafana-postgres-app
+              key: password
         ingress:
           enabled: true
           ingressClassName: tailscale
@@ -74,6 +77,12 @@ spec:
             level: info
           server:
             root_url: "https://grafana.gentoo-mine.ts.net/"
+          database:
+            type: postgres
+            host: grafana-postgres-rw.grafana.svc.cluster.local:5432
+            name: app
+            user: app
+            ssl_mode: disable
         admin:
           existingSecret: ""
         datasources:
