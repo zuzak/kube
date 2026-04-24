@@ -16,7 +16,7 @@ spec:
       valuesObject:
         global:
           priorityClassName: cluster-critical
-          domain: argocd.k3s.fluv.net
+          domain: argocd.gentoo-mine.ts.net
           affinity:
             nodeAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
@@ -29,32 +29,23 @@ spec:
                           - pi.home.arpa
         configs:
           cm:
-            # Pulls from the authentik secret in argocd namespace
-            # Secret must have label app.kubernetes.io/part-of: argocd
-            oidc.config: |
-              name: Authentik
-              issuer: https://authentik.k3s.fluv.net/application/o/argo-cd/
-              clientID: $authentik:client-id
-              clientSecret: $authentik:client-secret
-            oidc.tls.insecure.skip.verify: true
             admin.enabled: false
             accounts.claude: apiKey
+          params:
+            server.insecure: "true"
+            server.disable.auth: "true"
           rbac:
-            policy.default: role:readonly
-            policy.csv: |
-              g, authentik Admins, role:admin
-              p, claude, applications, sync, */*, allow
-              p, claude, applications, get, */*, allow
-              p, claude, applications, update, claude/*, allow
-              p, claude, applications, action/*, claude/*, allow
-            scopes: '[groups]'
+            policy.default: role:admin
         dex:
           enabled: false
         server:
           ingress:
             enabled: true
-            tls: true
-            ingressClassName: nginx
+            ingressClassName: tailscale
             annotations:
-              cert-manager.io/cluster-issuer: "letsencrypt-production"
-              nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+              tailscale.com/hostname: argocd
+            hosts:
+              - argocd
+            tls:
+              - hosts:
+                  - argocd
