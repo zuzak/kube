@@ -1,0 +1,23 @@
+#cloud-config
+# Template for Hetzner burst nodes. Secrets are substituted at secret-creation
+# time; the rendered, base64-encoded result lives in the hcloud-init-data
+# Kubernetes secret under the 'cloud-init' key.
+#
+# Substitution variables:
+#   __TAILSCALE_AUTH_KEY__  — ephemeral reusable auth key tagged tag:k3s
+#   __K3S_TOKEN__           — contents of /var/lib/rancher/k3s/server/node-token
+#
+# k3s server endpoint: saraneth's Tailscale IP (100.95.187.35)
+# Tailnet: gentoo-mine.ts.net
+
+runcmd:
+  # Install Tailscale and join the tailnet as a tagged ephemeral node
+  - curl -fsSL https://tailscale.com/install.sh | sh
+  - tailscale up --authkey=__TAILSCALE_AUTH_KEY__ --advertise-tags=tag:k3s --hostname=hcloud-$(curl -sf http://169.254.169.254/hetzner/v1/metadata/hostname)
+
+  # Wait for Tailscale to assign an IP before attempting to reach the k3s API
+  - until tailscale ip -4 2>/dev/null; do sleep 2; done
+
+  # Join the cluster as an agent node. The provider-id tells the hcloud CCM
+  # which Hetzner server this node corresponds to, enabling lifecycle management.
+  - curl -sfL https://get.k3s.io | K3S_URL=https://100.95.187.35:6443 K3S_TOKEN=__K3S_TOKEN__ sh -s - agent --kubelet-arg=provider-id=hcloud://$(curl -sf http://169.254.169.254/hetzner/v1/metadata/instance-id)
