@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hcloud-cloud-controller-manager
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "-15"
+spec:
+  project: hetzner
+  source:
+    repoURL: https://charts.hetzner.cloud
+    targetRevision: 1.*.*
+    chart: hcloud-cloud-controller-manager
+    helm:
+      values: |
+        networking:
+          enabled: false
+        args:
+          cloud-provider: hcloud
+          allow-untagged-cloud: "true"
+        priorityClassName: system-cluster-critical
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
