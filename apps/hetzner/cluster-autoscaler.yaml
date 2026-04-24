@@ -14,10 +14,8 @@ spec:
     targetRevision: 9.*.*
     chart: cluster-autoscaler
     helm:
-      values: |
+      valuesObject:
         cloudProvider: hetzner
-        autoDiscovery:
-          clusterName: ""
         extraEnv:
           - name: HCLOUD_TOKEN
             valueFrom:
@@ -32,7 +30,7 @@ spec:
           - name: HCLOUD_IMAGE
             value: ubuntu-24.04
         extraArgs:
-          nodes: 0:5:cx22:nbg1:hcloud-cx22-nbg1
+          nodes: 0:3:cx22:nbg1:hcloud-cx22-nbg1
           scale-down-delay-after-add: 5m
           scale-down-unneeded-time: 5m
           skip-nodes-with-system-pods: "false"
