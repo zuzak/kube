@@ -30,6 +30,12 @@ spec:
             user: file:///pgcreds/username
         worker:
           priorityClassName: cluster-critical
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 512Mi
           affinity:
             nodeAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
@@ -54,6 +60,12 @@ spec:
               readOnly: true
         server:
           priorityClassName: cluster-critical
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 768Mi
           affinity:
             nodeAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
