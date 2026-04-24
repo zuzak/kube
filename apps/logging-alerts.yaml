@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: logging-alerts
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    kubernetes.io/description: |
+      PrometheusRule covering Loki disk/ingest health and Alloy delivery.
+      Lives in its own namespace so it can sit in the `default` project
+      alongside the logging stack.
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging-alerts
+  source:
+    repoURL: https://github.com/zuzak/kube.git
+    path: logging-alerts
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

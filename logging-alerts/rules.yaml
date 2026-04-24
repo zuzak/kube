@@ -1,0 +1,99 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: logging-stack
+  namespace: logging-alerts
+  labels:
+    release: prometheus
+spec:
+  groups:
+    - name: loki-storage
+      rules:
+        - alert: LokiPVCNearlyFull
+          expr: |
+            (kubelet_volume_stats_used_bytes{namespace="loki"}
+              / kubelet_volume_stats_capacity_bytes{namespace="loki"}) > 0.80
+          for: 15m
+          labels:
+            severity: warning
+            component: loki
+          annotations:
+            summary: "Loki PVC {{ $labels.persistentvolumeclaim }} is {{ $value | humanizePercentage }} full"
+            description: "Loki is the authoritative store; once the PVC fills, ingest stalls. Increase the PVC, tighten retention, or investigate a log spike."
+        - alert: LokiPVCCritical
+          expr: |
+            (kubelet_volume_stats_used_bytes{namespace="loki"}
+              / kubelet_volume_stats_capacity_bytes{namespace="loki"}) > 0.92
+          for: 5m
+          labels:
+            severity: critical
+            component: loki
+          annotations:
+            summary: "Loki PVC {{ $labels.persistentvolumeclaim }} is {{ $value | humanizePercentage }} full — ingest imminent"
+            description: "Act now: expand the PVC or delete old chunks before ingest halts."
+
+    - name: loki-ingest
+      rules:
+        - alert: LokiDown
+          expr: up{job=~".*loki.*", namespace="loki"} == 0
+          for: 10m
+          labels:
+            severity: critical
+            component: loki
+          annotations:
+            summary: "Loki scrape target {{ $labels.instance }} is down"
+            description: "Prometheus has been unable to scrape Loki for 10 minutes. Check the pod and its PVC."
+        - alert: LokiIngestStalled
+          expr: |
+            (sum(rate(loki_distributor_bytes_received_total[10m])) == 0)
+            and (sum(up{job=~".*loki.*", namespace="loki"}) > 0)
+          for: 30m
+          labels:
+            severity: warning
+            component: loki
+          annotations:
+            summary: "Loki is up but not ingesting any log bytes"
+            description: "The Loki pod reports healthy but no bytes have been received for 30 minutes. Alloy may have stopped shipping, or a rate limit has been hit."
+        - alert: LokiRejectingWrites
+          expr: |
+            sum(rate(loki_distributor_lines_discarded_total[10m])) by (reason) > 0
+          for: 15m
+          labels:
+            severity: warning
+            component: loki
+          annotations:
+            summary: "Loki is dropping log lines (reason: {{ $labels.reason }})"
+            description: "Loki has been discarding incoming lines for 15 minutes. Check ingestion limits and stream cardinality."
+
+    - name: alloy-delivery
+      rules:
+        - alert: AlloyDown
+          expr: up{job=~".*alloy.*", namespace="alloy"} == 0
+          for: 10m
+          labels:
+            severity: warning
+            component: alloy
+          annotations:
+            summary: "Alloy scrape target {{ $labels.instance }} is down"
+            description: "The Alloy DaemonSet pod on {{ $labels.instance }} cannot be scraped. Logs from that node are not being shipped."
+        - alert: AlloyDroppingLogs
+          expr: |
+            sum(rate(loki_write_dropped_bytes_total[15m])) by (pod) > 0
+          for: 15m
+          labels:
+            severity: warning
+            component: alloy
+          annotations:
+            summary: "Alloy pod {{ $labels.pod }} is dropping log bytes on send"
+            description: "Alloy has been unable to deliver logs to Loki for 15 minutes (queue full or Loki rejecting). Check Loki health and alloy_write errors."
+        - alert: AlloyPartialNodeCoverage
+          expr: |
+            count(up{job=~".*alloy.*", namespace="alloy"} == 1)
+              < count(kube_node_info)
+          for: 20m
+          labels:
+            severity: warning
+            component: alloy
+          annotations:
+            summary: "Alloy is not running on every node"
+            description: "Fewer healthy Alloy pods than cluster nodes — at least one node's logs are not being collected."
