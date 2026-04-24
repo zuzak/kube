@@ -27,6 +27,8 @@ spec:
         nodeSelector:
           kubernetes.io/hostname: pi.home.arpa
         replicas: 1
+        deploymentStrategy:
+          type: Recreate
         resources:
           requests:
             cpu: 50m
