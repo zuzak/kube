@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: logging-stack
-  namespace: logging-alerts
+  namespace: loki
   labels:
     release: prometheus
 spec:

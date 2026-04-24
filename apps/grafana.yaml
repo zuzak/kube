@@ -13,7 +13,7 @@ metadata:
       namespaces, so additional Prometheuses/Lokis can register themselves
       by dropping a labelled ConfigMap in their own namespace.
 spec:
-  project: default
+  project: logging
   destination:
     server: https://kubernetes.default.svc
     namespace: grafana

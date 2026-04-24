@@ -13,7 +13,7 @@ metadata:
       dropping old chunks if throughput ever spikes. PrometheusRule alerts
       (logging-alerts) surface disk headroom and ingest health.
 spec:
-  project: default
+  project: logging
   destination:
     server: https://kubernetes.default.svc
     namespace: loki

@@ -10,10 +10,10 @@ metadata:
       Lives in its own namespace so it can sit in the `default` project
       alongside the logging stack.
 spec:
-  project: default
+  project: logging
   destination:
     server: https://kubernetes.default.svc
-    namespace: logging-alerts
+    namespace: loki
   source:
     repoURL: https://github.com/zuzak/kube.git
     path: logging-alerts
@@ -24,5 +24,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true

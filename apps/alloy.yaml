@@ -10,7 +10,7 @@ metadata:
       shipping them to Loki. Tails files from /var/log/pods via hostPath;
       relabels K8s metadata onto each stream. No ingress.
 spec:
-  project: default
+  project: logging
   destination:
     server: https://kubernetes.default.svc
     namespace: alloy
