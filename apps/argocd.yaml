@@ -32,7 +32,6 @@ spec:
             admin.enabled: false
             accounts.claude: apiKey
           params:
-            server.insecure: "true"
             server.disable.auth: "true"
           rbac:
             policy.default: role:admin
