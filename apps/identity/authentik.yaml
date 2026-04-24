@@ -29,6 +29,7 @@ spec:
             port: file:///pgcreds/port
             user: file:///pgcreds/username
         worker:
+          replicas: 0
           priorityClassName: cluster-critical
           resources:
             requests:
@@ -59,6 +60,7 @@ spec:
               mountPath: /pgcreds
               readOnly: true
         server:
+          replicas: 0
           priorityClassName: cluster-critical
           resources:
             requests:
