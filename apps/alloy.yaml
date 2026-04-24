@@ -104,13 +104,6 @@ spec:
                   url = "http://loki.loki.svc.cluster.local:3100/loki/api/v1/push"
                 }
               }
-
-              prometheus.exporter.unix "node" { }
-
-              prometheus.scrape "self" {
-                targets    = prometheus.exporter.unix.node.targets
-                forward_to = []
-              }
         serviceMonitor:
           enabled: true
           additionalLabels:

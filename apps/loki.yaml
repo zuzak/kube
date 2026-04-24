@@ -103,9 +103,6 @@ spec:
             enabled: true
             labels:
               release: prometheus
-        sidecar:
-          image:
-            repository: kiwigrid/k8s-sidecar
         minio:
           enabled: false
   syncPolicy:

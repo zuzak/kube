@@ -56,7 +56,7 @@ spec:
             description: "The Loki pod reports healthy but no bytes have been received for 30 minutes. Alloy may have stopped shipping, or a rate limit has been hit."
         - alert: LokiRejectingWrites
           expr: |
-            sum(rate(loki_distributor_lines_discarded_total[10m])) by (reason) > 0
+            sum(rate(loki_discarded_samples_total[10m])) by (reason) > 0
           for: 15m
           labels:
             severity: warning
