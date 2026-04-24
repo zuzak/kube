@@ -34,6 +34,7 @@ spec:
               - hosts:
                   - prometheus.gentoo-mine.ts.net
           prometheusSpec:
+            replicas: 0 # scaled to zero pending investigation of zuzak/kube#111
             podMonitorSelectorNilUsesHelmValues: false
             serviceMonitorSelectorNilUsesHelmValues: false
             affinity:
