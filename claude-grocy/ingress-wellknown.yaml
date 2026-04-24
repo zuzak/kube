@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: claude-grocy-wellknown
+  namespace: claude-grocy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: grocy.mcp.k3s.fluv.net
+      http:
+        paths:
+          - path: /.well-known
+            pathType: Prefix
+            backend:
+              service:
+                name: claude-grocy
+                port:
+                  number: 8080
+          - path: /register
+            pathType: Exact
+            backend:
+              service:
+                name: claude-grocy
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - grocy.mcp.k3s.fluv.net
+      secretName: grocy-mcp-k3s-fluv-net-tls
