@@ -12,6 +12,8 @@ spec:
     metadata:
       labels:
         app: autoscaler-balloon
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     spec:
       priorityClassName: cluster-autoscaler-balloon
       terminationGracePeriodSeconds: 0
