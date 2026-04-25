@@ -21,9 +21,34 @@ spec:
         autoscalingGroups:
           - name: hcloud-cx23-nbg1
             minSize: 0
-            maxSize: 3
+            maxSize: 1
             instanceType: cx23
             region: nbg1
+          - name: hcloud-cx23-fsn1
+            minSize: 0
+            maxSize: 1
+            instanceType: cx23
+            region: fsn1
+          - name: hcloud-cx23-hel1
+            minSize: 0
+            maxSize: 1
+            instanceType: cx23
+            region: hel1
+          - name: hcloud-cx33-nbg1
+            minSize: 0
+            maxSize: 1
+            instanceType: cx33
+            region: nbg1
+          - name: hcloud-cx33-fsn1
+            minSize: 0
+            maxSize: 1
+            instanceType: cx33
+            region: fsn1
+          - name: hcloud-cx33-hel1
+            minSize: 0
+            maxSize: 1
+            instanceType: cx33
+            region: hel1
         extraEnv:
           HCLOUD_IMAGE: ubuntu-24.04
         extraEnvSecrets:
@@ -37,6 +62,7 @@ spec:
           scale-down-delay-after-add: 50m
           scale-down-unneeded-time: 5m
           skip-nodes-with-system-pods: "false"
+          expander: least-waste
         hostNetwork: true
         tolerations:
           - key: node-role.kubernetes.io/control-plane
