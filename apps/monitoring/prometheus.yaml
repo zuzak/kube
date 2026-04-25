@@ -34,7 +34,7 @@ spec:
               - hosts:
                   - prometheus.gentoo-mine.ts.net
           prometheusSpec:
-            replicas: 0
+            replicas: 1
             priorityClassName: cluster-low
             resources:
               requests:
