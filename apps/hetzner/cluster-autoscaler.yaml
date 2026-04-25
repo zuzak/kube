@@ -24,9 +24,13 @@ spec:
             region: nbg1
         extraEnv:
           HCLOUD_IMAGE: ubuntu-24.04
-        extraEnvFrom:
-          - secretRef:
-              name: hcloud-autoscaler-env
+        extraEnvSecrets:
+          HCLOUD_TOKEN:
+            name: hcloud
+            key: token
+          HCLOUD_CLOUD_INIT:
+            name: hcloud-init-data
+            key: cloud-init
         extraArgs:
           scale-down-delay-after-add: 50m
           scale-down-unneeded-time: 5m
