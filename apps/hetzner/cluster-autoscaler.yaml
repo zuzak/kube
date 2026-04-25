@@ -37,6 +37,7 @@ spec:
           scale-down-delay-after-add: 50m
           scale-down-unneeded-time: 5m
           skip-nodes-with-system-pods: "false"
+        hostNetwork: true
         nodeSelector:
           kubernetes.io/hostname: saraneth
         tolerations:
