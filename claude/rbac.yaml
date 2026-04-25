@@ -59,6 +59,27 @@ rules:
   - apiGroups: ["apps"]
     resources: ["deployments/scale", "statefulsets/scale"]
     verbs: ["get", "create", "update", "patch"]
+  # Allow deleting pods so DaemonSet/StatefulSet pods can be recycled
+  # (e.g. stale-IP recovery after CNI changes — scale 0→1 doesn't help
+  # for DaemonSets). Pods are not GitOps-managed; the controller
+  # recreates from declared spec, so this can't bypass ArgoCD.
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["delete"]
+---
+# Cluster-wide role for Longhorn volume recovery operations.
+# Needed for clearing failedAt on stuck replicas during volume salvage,
+# or setting salvageRequested on engines. These are runtime state
+# managed by Longhorn itself, not declared in git — patching them does
+# not bypass GitOps.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: claude-longhorn-recovery
+rules:
+  - apiGroups: ["longhorn.io"]
+    resources: ["replicas", "engines", "volumes"]
+    verbs: ["patch", "update"]
 ---
 # Grant write access in the claude namespace itself.
 apiVersion: rbac.authorization.k8s.io/v1
@@ -141,6 +162,55 @@ kind: RoleBinding
 metadata:
   name: claude
   namespace: claude-vestibule
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: claude-namespace-admin
+subjects:
+  - kind: ServiceAccount
+    name: claude
+    namespace: claude
+---
+# Grant pod-recycle access in longhorn-system. Needed for stale-IP
+# recovery on Longhorn DaemonSets (longhorn-manager, longhorn-csi-plugin,
+# engine-image) after CNI/networking changes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: claude
+  namespace: longhorn-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: claude-namespace-admin
+subjects:
+  - kind: ServiceAccount
+    name: claude
+    namespace: claude
+---
+# Grant Longhorn replica/engine/volume patch access for volume recovery
+# operations (clearing failedAt on stuck replicas, requesting salvage).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: claude-longhorn-recovery
+  namespace: longhorn-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: claude-longhorn-recovery
+subjects:
+  - kind: ServiceAccount
+    name: claude
+    namespace: claude
+---
+# Grant pod-recycle access in cert-manager. Needed for stale-IP recovery
+# on cert-manager pods after CNI/networking changes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: claude
+  namespace: cert-manager
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
