@@ -38,8 +38,6 @@ spec:
           scale-down-unneeded-time: 5m
           skip-nodes-with-system-pods: "false"
         hostNetwork: true
-        nodeSelector:
-          kubernetes.io/hostname: saraneth
         tolerations:
           - key: node-role.kubernetes.io/control-plane
             effect: NoSchedule
