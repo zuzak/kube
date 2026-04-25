@@ -37,6 +37,8 @@ spec:
           scale-down-delay-after-add: 50m
           scale-down-unneeded-time: 5m
           skip-nodes-with-system-pods: "false"
+        nodeSelector:
+          kubernetes.io/hostname: saraneth
         tolerations:
           - key: node-role.kubernetes.io/control-plane
             effect: NoSchedule
