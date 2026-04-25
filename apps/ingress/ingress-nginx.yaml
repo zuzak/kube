@@ -16,6 +16,7 @@ spec:
     helm:
       values: |
         controller:
+          kind: DaemonSet
           priorityClassName: cluster-critical
           metrics:
             enabled: true
