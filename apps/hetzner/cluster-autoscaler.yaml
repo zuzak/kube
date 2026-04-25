@@ -19,10 +19,10 @@ spec:
           tag: v1.33.4
         cloudProvider: hetzner
         autoscalingGroups:
-          - name: hcloud-cx22-nbg1
+          - name: hcloud-cx23-nbg1
             minSize: 0
             maxSize: 3
-            instanceType: cx22
+            instanceType: cx23
             region: nbg1
         extraEnv:
           HCLOUD_IMAGE: ubuntu-24.04
