@@ -96,6 +96,22 @@ spec:
 
               loki.process "cri" {
                 stage.cri {}
+
+                // klog format: lines begin with I/W/E/F followed by MMDD timestamp.
+                // Map to canonical level names so Grafana colours them correctly.
+                stage.regex {
+                  expression = `^(?P<level>[IWEF])\d{4} `
+                }
+                stage.template {
+                  source   = "level"
+                  template = `{{ if eq .Value "I" }}info{{ else if eq .Value "W" }}warn{{ else if eq .Value "E" }}error{{ else if eq .Value "F" }}critical{{ end }}`
+                }
+                stage.labels {
+                  values = {
+                    level = "level",
+                  }
+                }
+
                 forward_to = [loki.write.local.receiver]
               }
 
