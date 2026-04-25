@@ -23,7 +23,46 @@ spec:
         grafana:
           enabled: false
         prometheus:
-          enabled: false
+          ingress:
+            enabled: true
+            ingressClassName: tailscale
+            pathType: ImplementationSpecific
+            paths: [ / ]
+            hosts:
+              - prometheus.gentoo-mine.ts.net
+            tls:
+              - hosts:
+                  - prometheus.gentoo-mine.ts.net
+          prometheusSpec:
+            replicas: 0
+            priorityClassName: cluster-low
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                memory: 1Gi
+            podMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorSelectorNilUsesHelmValues: false
+            affinity:
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                  - weight: 100
+                    preference:
+                      matchExpressions:
+                        - key: kubernetes.io/hostname
+                          operator: In
+                          values:
+                            - pi.home.arpa
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: longhorn-durable
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 50Gi
         prometheusOperator:
           priorityClassName: cluster-low
           affinity:
