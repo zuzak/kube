@@ -96,6 +96,24 @@ subjects:
     name: claude
     namespace: claude
 ---
+# Full namespace-admin in the claude namespace as scratch space.
+# Lets Claude run debug pods (kubectl run, kubectl debug) instead of
+# execing into random app pods that bring their own networking quirks.
+# Scoped strictly to the claude namespace; no cluster-wide impact.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: claude-scratch
+  namespace: claude
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: admin
+subjects:
+  - kind: ServiceAccount
+    name: claude
+    namespace: claude
+---
 # Grant write access in the claude-router-mcp namespace.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
