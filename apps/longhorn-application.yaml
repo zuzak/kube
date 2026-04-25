@@ -18,6 +18,17 @@ spec:
         valuesObject:
           preUpgradeChecker:
             jobEnabled: false
+          csi:
+            attacher:
+              replicaCount: 1
+            provisioner:
+              replicaCount: 1
+            resizer:
+              replicaCount: 1
+            snapshotter:
+              replicaCount: 1
+          longhornUI:
+            replicas: 1
           persistence:
             defaultClassReplicaCount: 2
           metrics:
