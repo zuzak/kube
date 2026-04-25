@@ -18,6 +18,9 @@ spec:
         args:
           cloud-provider: hcloud
           allow-untagged-cloud: "true"
+        env:
+          HCLOUD_LOAD_BALANCERS_ENABLED:
+            value: "false"
         priorityClassName: system-cluster-critical
   destination:
     server: https://kubernetes.default.svc
