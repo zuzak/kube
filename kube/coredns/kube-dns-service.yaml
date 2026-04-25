@@ -1,3 +1,20 @@
+# Workaround: pins each node to its local CoreDNS pod.
+#
+# Cross-node pod-to-pod is broken (Pi runs vxlan flannel, saraneth runs
+# native Tailscale flannel — there's no shared overlay, so Pi has no route
+# to 10.42.1.0/24 and vice versa). The kube-dns Service has one endpoint
+# per node (CoreDNS pod IPs); without this, kube-proxy load-balances 50/50
+# and half of every pod's DNS queries time out.
+#
+# internalTrafficPolicy: Local makes kube-proxy keep service traffic on
+# the originating node, so each pod only ever hits its local CoreDNS.
+#
+# Caveat: k3s ships kube-dns as an Addon owned by wrangler
+# (objectset.rio.cattle.io/owner-name: coredns). Wrangler may revert this
+# on k3s restart. If that happens: either --disable=coredns and ship our
+# own via ArgoCD, or fix the underlying overlay and delete this file.
+#
+# Long-term: fix cross-node pod overlay. Then this file should be removed.
 apiVersion: v1
 kind: Service
 metadata:
