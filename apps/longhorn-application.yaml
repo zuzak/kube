@@ -19,14 +19,10 @@ spec:
           preUpgradeChecker:
             jobEnabled: false
           csi:
-            attacher:
-              replicaCount: 1
-            provisioner:
-              replicaCount: 1
-            resizer:
-              replicaCount: 1
-            snapshotter:
-              replicaCount: 1
+            attacherReplicaCount: 1
+            provisionerReplicaCount: 1
+            resizerReplicaCount: 1
+            snapshotterReplicaCount: 1
           longhornUI:
             replicas: 1
           persistence:
