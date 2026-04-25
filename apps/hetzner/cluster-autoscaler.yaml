@@ -36,7 +36,7 @@ spec:
           - name: HCLOUD_IMAGE
             value: ubuntu-24.04
         extraArgs:
-          scale-down-delay-after-add: 5m
+          scale-down-delay-after-add: 50m
           scale-down-unneeded-time: 5m
           skip-nodes-with-system-pods: "false"
         tolerations:
