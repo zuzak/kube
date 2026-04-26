@@ -10,6 +10,13 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    # Rate limiting: unauthenticated endpoint proxying requests to waitrose.com.
+    # 60 rpm is well above normal claude.ai usage (a few lookups per minute);
+    # limits blast radius if the URL is ever accidentally discovered/shared.
+    # limit-connections caps SSE stream concurrency — claude.ai opens a few
+    # concurrent GET streams per session.
+    nginx.ingress.kubernetes.io/limit-rpm: "60"
+    nginx.ingress.kubernetes.io/limit-connections: "10"
 spec:
   ingressClassName: nginx
   rules:
