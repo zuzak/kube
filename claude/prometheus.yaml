@@ -65,7 +65,6 @@ spec:
   type: ClusterIP
   selector:
     prometheus: claude
-    app.kubernetes.io/name: prometheus
   ports:
     - name: web
       port: 9090

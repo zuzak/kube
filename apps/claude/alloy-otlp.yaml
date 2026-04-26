@@ -1,0 +1,84 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alloy-otlp
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    kubernetes.io/description: |
+      Grafana Alloy receiving OTLP telemetry from Claude Code and forwarding
+      metrics to the claude-namespace Prometheus via remote_write. Deployed as
+      a single-replica Deployment pinned to the Pi (hostPort 4317 is safe there;
+      saraneth has no Claude Code processes). Separate from the cluster-wide
+      log-collection Alloy DaemonSet.
+spec:
+  project: claude
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: claude
+  source:
+    repoURL: https://github.com/grafana/alloy.git
+    path: operations/helm/charts/alloy
+    targetRevision: HEAD
+    helm:
+      valuesObject:
+        controller:
+          type: deployment
+          replicas: 1
+          priorityClassName: cluster-low
+          nodeSelector:
+            kubernetes.io/hostname: pi.home.arpa
+        alloy:
+          clustering:
+            enabled: false
+          extraPorts:
+            - name: otlp-grpc
+              port: 4317
+              targetPort: 4317
+              hostPort: 4317
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          configMap:
+            create: true
+            content: |
+              logging {
+                level  = "info"
+                format = "logfmt"
+              }
+
+              otelcol.receiver.otlp "claude" {
+                grpc {
+                  endpoint = "0.0.0.0:4317"
+                }
+                output {
+                  metrics = [otelcol.exporter.prometheus.claude.input]
+                }
+              }
+
+              otelcol.exporter.prometheus "claude" {
+                forward_to = [prometheus.remote_write.claude.receiver]
+              }
+
+              prometheus.remote_write "claude" {
+                endpoint {
+                  url = "http://prometheus-claude.claude.svc.cluster.local:9090/api/v1/write"
+                }
+              }
+        serviceMonitor:
+          enabled: false
+        rbac:
+          create: true
+        serviceAccount:
+          create: true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
