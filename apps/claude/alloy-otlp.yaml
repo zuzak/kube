@@ -77,6 +77,25 @@ spec:
                   endpoint = "0.0.0.0:4317"
                 }
                 output {
+                  metrics = [otelcol.processor.transform.claude_descriptions.input]
+                }
+              }
+
+              otelcol.processor.transform "claude_descriptions" {
+                metric_statements {
+                  context = "metric"
+                  statements = [
+                    `set(description, "Count of CLI sessions started") where name == "claude_code.session.count"`,
+                    `set(description, "Count of lines of code modified; 'type' attribute is 'added' or 'removed'") where name == "claude_code.lines_of_code.count"`,
+                    `set(description, "Number of pull requests created") where name == "claude_code.pull_request.count"`,
+                    `set(description, "Number of git commits created") where name == "claude_code.commit.count"`,
+                    `set(description, "Cost of the Claude Code session in USD") where name == "claude_code.cost.usage"`,
+                    `set(description, "Number of tokens used") where name == "claude_code.token.usage"`,
+                    `set(description, "Count of Edit/Write/NotebookEdit tool permission decisions; 'decision' attribute is 'accept' or 'reject'") where name == "claude_code.code_edit_tool.decision"`,
+                    `set(description, "Total active time in seconds") where name == "claude_code.active_time.total"`,
+                  ]
+                }
+                output {
                   metrics = [otelcol.exporter.prometheus.claude.input]
                 }
               }
