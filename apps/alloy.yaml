@@ -8,7 +8,9 @@ metadata:
     kubernetes.io/description: |
       Grafana Alloy collecting pod logs cluster-wide as a DaemonSet and
       shipping them to Loki. Tails files from /var/log/pods via hostPath;
-      relabels K8s metadata onto each stream. No ingress.
+      relabels K8s metadata onto each stream. Also receives Claude Code
+      OTLP telemetry on hostPort 4317 (Pi only) and forwards metrics to
+      the claude-namespace Prometheus and logs to Loki. No ingress.
 spec:
   project: logging
   destination:
@@ -26,6 +28,12 @@ spec:
         alloy:
           clustering:
             enabled: false
+          extraPorts:
+            - name: otlp-grpc
+              port: 4317
+              targetPort: 4317
+              hostPort: 4317
+              protocol: TCP
           mounts:
             varlog: true
             dockercontainers: true
@@ -118,6 +126,31 @@ spec:
               loki.write "local" {
                 endpoint {
                   url = "http://loki.loki.svc.cluster.local:3100/loki/api/v1/push"
+                }
+              }
+
+              // Claude Code OTLP telemetry (hostPort 4317 on Pi)
+              // Requires CLAUDE_CODE_ENABLE_TELEMETRY=1 and OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+              // on the Pi host. See zuzak/.claude#408 for full env var set.
+              otelcol.receiver.otlp "claude_code" {
+                grpc { endpoint = "0.0.0.0:4317" }
+                output {
+                  logs    = [otelcol.exporter.loki.claude_code.input]
+                  metrics = [otelcol.exporter.prometheus.claude_code.input]
+                }
+              }
+
+              otelcol.exporter.loki "claude_code" {
+                forward_to = [loki.write.local.receiver]
+              }
+
+              otelcol.exporter.prometheus "claude_code" {
+                forward_to = [prometheus.remote_write.claude.receiver]
+              }
+
+              prometheus.remote_write "claude" {
+                endpoint {
+                  url = "http://prometheus-claude.claude.svc.cluster.local:9090/api/v1/write"
                 }
               }
         serviceMonitor:
