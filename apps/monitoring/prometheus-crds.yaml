@@ -27,3 +27,7 @@ spec:
             enabled: false
           prometheusrules:
             enabled: true
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
