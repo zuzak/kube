@@ -1,0 +1,27 @@
+# Exposes only the ArgoCD webhook receiver on a public hostname.
+# Everything else (UI, API) remains Tailscale-only via argocd-server ingress.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-webhook
+  namespace: argocd
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - argocd.k3s.fluv.net
+      secretName: argocd-webhook-tls
+  rules:
+    - host: argocd.k3s.fluv.net
+      http:
+        paths:
+          - path: /api/webhook
+            pathType: Exact
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 80
