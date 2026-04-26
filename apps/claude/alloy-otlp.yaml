@@ -154,9 +154,11 @@ spec:
                 }
 
                 // Drop high-volume / low-signal entry types
+                // Note: attachment is excluded here — hook_permission_decision attachments are
+                // selectively kept below; all other attachment subtypes are dropped there.
                 stage.drop {
                   source     = "entry_type"
-                  expression = "^(user|last-prompt|attachment|file-history-snapshot)$"
+                  expression = "^(user|last-prompt|file-history-snapshot)$"
                 }
 
                 // Promote common fields to labels
@@ -265,6 +267,69 @@ spec:
                   stage.labels {
                     values = {
                       title = "",
+                    }
+                  }
+                }
+
+                // attachment entries: extract subtype as a label so we can
+                // selectively drop non-permission entries in the next stage
+                stage.match {
+                  selector = `{type="attachment"}`
+
+                  stage.json {
+                    expressions = {
+                      attachment_type = "attachment.type",
+                    }
+                  }
+
+                  stage.labels {
+                    values = {
+                      attachment_type = "",
+                    }
+                  }
+                }
+
+                // drop attachment subtypes we don't care about; keep:
+                //   hook_permission_decision  – tool permission decisions
+                //   hook_blocking_error       – invariant violations (rare, high signal)
+                //   hook_non_blocking_error   – hook health failures
+                stage.match {
+                  selector = `{type="attachment", attachment_type!~"hook_permission_decision|hook_blocking_error|hook_non_blocking_error"}`
+                  action   = "drop"
+                }
+
+                // permission-decision attachments: extract the decision label
+                stage.match {
+                  selector = `{type="attachment", attachment_type="hook_permission_decision"}`
+
+                  stage.json {
+                    expressions = {
+                      permission_decision = "attachment.decision",
+                    }
+                  }
+
+                  stage.labels {
+                    values = {
+                      permission_decision = "",
+                    }
+                  }
+                }
+
+                // hook error attachments (blocking and non-blocking): extract hook name
+                stage.match {
+                  selector = `{type="attachment", attachment_type=~"hook_blocking_error|hook_non_blocking_error"}`
+
+                  stage.json {
+                    expressions = {
+                      hook_name  = "attachment.hookName",
+                      hook_event = "attachment.hookEvent",
+                    }
+                  }
+
+                  stage.labels {
+                    values = {
+                      hook_name  = "",
+                      hook_event = "",
                     }
                   }
                 }
