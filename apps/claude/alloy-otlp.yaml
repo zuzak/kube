@@ -22,6 +22,8 @@ spec:
     targetRevision: HEAD
     helm:
       valuesObject:
+        crds:
+          create: false
         controller:
           type: deployment
           replicas: 1
