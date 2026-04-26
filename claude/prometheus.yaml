@@ -15,8 +15,14 @@ metadata:
 spec:
   replicas: 1
   serviceAccountName: prometheus-claude
-  enableFeatures:
-    - remote-write-receiver
+  # remote-write-receiver is no longer an --enable-feature flag in Prometheus 3.x;
+  # it is a separate --web flag.
+  additionalArgs:
+    - name: web.enable-remote-write-receiver
+  securityContext:
+    fsGroup: 65534
+    runAsUser: 65534
+    runAsNonRoot: true
   resources:
     requests:
       cpu: 50m
