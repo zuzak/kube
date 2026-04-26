@@ -8,9 +8,7 @@ metadata:
     kubernetes.io/description: |
       Grafana Alloy collecting pod logs cluster-wide as a DaemonSet and
       shipping them to Loki. Tails files from /var/log/pods via hostPath;
-      relabels K8s metadata onto each stream. Also ingests Claude Code
-      JSONL transcripts from /home/claude/.claude/projects/ with type-based
-      label extraction. No ingress.
+      relabels K8s metadata onto each stream. No ingress.
 spec:
   project: logging
   destination:
@@ -25,22 +23,12 @@ spec:
         controller:
           type: daemonset
           priorityClassName: cluster-low
-          volumes:
-            extra:
-              - name: home-claude
-                hostPath:
-                  path: /home/claude/.claude/projects
-                  type: Directory
         alloy:
           clustering:
             enabled: false
           mounts:
             varlog: true
             dockercontainers: true
-            extra:
-              - name: home-claude
-                mountPath: /home/claude/.claude/projects
-                readOnly: true
           resources:
             requests:
               cpu: 50m
@@ -121,160 +109,6 @@ spec:
                 stage.labels {
                   values = {
                     level = "level",
-                  }
-                }
-
-                forward_to = [loki.write.local.receiver]
-              }
-
-              // --- Claude Code JSONL transcript ingestion ---
-
-              local.file_match "claude_transcripts" {
-                path_targets = [{
-                  __path__ = "/home/claude/.claude/projects/**/*.jsonl",
-                  job      = "claude-transcripts",
-                }]
-              }
-
-              loki.source.file "claude_transcripts" {
-                targets    = local.file_match.claude_transcripts.targets
-                forward_to = [loki.relabel.claude_transcripts.receiver]
-              }
-
-              // Extract session UUID from the filename; all JSONL files are named <uuid>.jsonl
-              loki.relabel "claude_transcripts" {
-                forward_to = [loki.process.claude_transcripts.receiver]
-
-                rule {
-                  source_labels = ["filename"]
-                  regex         = `.*/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.jsonl$`
-                  target_label  = "session_id"
-                  replacement   = "$1"
-                }
-              }
-
-              loki.process "claude_transcripts" {
-                // Extract type first so the drop stage can filter on it
-                stage.json {
-                  expressions = {
-                    entry_type = "type",
-                    version    = "version",
-                  }
-                }
-
-                // Drop high-volume / low-signal entry types
-                stage.drop {
-                  source     = "entry_type"
-                  expression = "^(user|last-prompt|attachment|file-history-snapshot)$"
-                }
-
-                // Promote common fields to labels
-                stage.labels {
-                  values = {
-                    type    = "entry_type",
-                    version = "",
-                  }
-                }
-
-                // assistant entries: model, stop reason, and error metadata
-                stage.match {
-                  selector = `{type="assistant"}`
-
-                  stage.json {
-                    expressions = {
-                      model        = "message.model",
-                      stop_reason  = "message.stop_reason",
-                      is_api_error = "isApiErrorMessage",
-                      error        = "error",
-                    }
-                  }
-                  stage.labels {
-                    values = {
-                      model        = "",
-                      stop_reason  = "",
-                      is_api_error = "",
-                      error        = "",
-                    }
-                  }
-                }
-
-                // permission-mode entries
-                stage.match {
-                  selector = `{type="permission-mode"}`
-
-                  stage.json {
-                    expressions = {
-                      permission_mode = "permission_mode",
-                    }
-                  }
-                  stage.labels {
-                    values = {
-                      permission_mode = "",
-                    }
-                  }
-                }
-
-                // pr-link entries (JSON field is camelCase prUrl)
-                stage.match {
-                  selector = `{type="pr-link"}`
-
-                  stage.json {
-                    expressions = {
-                      pr_url = "prUrl",
-                    }
-                  }
-                  stage.labels {
-                    values = {
-                      pr_url = "",
-                    }
-                  }
-                }
-
-                // agent-name entries (JSON field is camelCase agentName)
-                stage.match {
-                  selector = `{type="agent-name"}`
-
-                  stage.json {
-                    expressions = {
-                      agent_name = "agentName",
-                    }
-                  }
-                  stage.labels {
-                    values = {
-                      agent_name = "",
-                    }
-                  }
-                }
-
-                // queue-operation entries (JSON field is "operation", no queue_size in practice)
-                stage.match {
-                  selector = `{type="queue-operation"}`
-
-                  stage.json {
-                    expressions = {
-                      operation = "operation",
-                    }
-                  }
-                  stage.labels {
-                    values = {
-                      operation = "",
-                    }
-                  }
-                }
-
-                // custom-title entries (JSON field is camelCase customTitle)
-                stage.match {
-                  selector = `{type="custom-title"}`
-
-                  stage.json {
-                    expressions = {
-                      title = "customTitle",
-                    }
-                  }
-                  stage.labels {
-                    values = {
-                      title = "",
-                    }
                   }
                 }
 
