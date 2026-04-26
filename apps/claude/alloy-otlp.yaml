@@ -38,6 +38,10 @@ spec:
                 hostPath:
                   path: /home/claude/.claude/projects
                   type: Directory
+              - name: alloy-storage
+                hostPath:
+                  path: /home/claude/.alloy-storage
+                  type: DirectoryOrCreate
         alloy:
           clustering:
             enabled: false
@@ -52,6 +56,8 @@ spec:
               - name: home-claude
                 mountPath: /home/claude/.claude/projects
                 readOnly: true
+              - name: alloy-storage
+                mountPath: /tmp/alloy
           resources:
             requests:
               cpu: 20m
@@ -112,12 +118,20 @@ spec:
               }
 
               loki.process "claude_transcripts" {
-                // Extract type first so the drop stage can filter on it
+                // Extract type, version, and actual entry timestamp
                 stage.json {
                   expressions = {
                     entry_type = "type",
                     version    = "version",
+                    entry_ts   = "timestamp",
                   }
+                }
+
+                // Use the entry's own timestamp rather than ingestion time;
+                // prevents all history appearing at pod-start time on restart
+                stage.timestamp {
+                  source = "entry_ts"
+                  format = "RFC3339"
                 }
 
                 // Drop high-volume / low-signal entry types
