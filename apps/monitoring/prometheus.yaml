@@ -89,3 +89,7 @@ spec:
         cleanPrometheusOperatorObjectNames: true
         defaultRules:
           create: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
