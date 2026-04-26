@@ -1,0 +1,93 @@
+# Claude Code telemetry — separate Prometheus instance, receive-only.
+# Alloy pushes OTLP metrics here via remote_write; no scraping configured.
+# Separated from cluster Prometheus per zuzak/.claude#408.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-claude
+  namespace: claude
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: claude
+  namespace: claude
+spec:
+  replicas: 1
+  serviceAccountName: prometheus-claude
+  enableFeatures:
+    - remote-write-receiver
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+  retention: 30d
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: longhorn-durable
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+  # Receive-only: matchLabels that nothing carries, so no scraping happens.
+  serviceMonitorSelector:
+    matchLabels:
+      prometheus: claude
+  serviceMonitorNamespaceSelector:
+    matchLabels:
+      prometheus: claude
+  podMonitorSelector:
+    matchLabels:
+      prometheus: claude
+  podMonitorNamespaceSelector:
+    matchLabels:
+      prometheus: claude
+  ruleSelector:
+    matchLabels:
+      prometheus: claude
+  ruleNamespaceSelector:
+    matchLabels:
+      prometheus: claude
+  priorityClassName: cluster-low
+  nodeSelector:
+    kubernetes.io/hostname: pi.home.arpa
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-claude
+  namespace: claude
+spec:
+  type: ClusterIP
+  selector:
+    prometheus: claude
+    app.kubernetes.io/name: prometheus
+  ports:
+    - name: web
+      port: 9090
+      targetPort: 9090
+---
+# Grafana datasource: sidecar watches ConfigMaps labelled grafana_datasource=1 cluster-wide.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasource-claude-prometheus
+  namespace: claude
+  labels:
+    grafana_datasource: "1"
+data:
+  datasource.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Claude Prometheus
+        uid: claude-prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus-claude.claude.svc.cluster.local:9090
+        isDefault: false
+        jsonData:
+          timeInterval: 15s
