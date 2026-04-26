@@ -8,9 +8,9 @@ metadata:
     kubernetes.io/description: |
       Grafana Alloy receiving OTLP telemetry from Claude Code and forwarding
       metrics to the claude-namespace Prometheus via remote_write. Deployed as
-      a single-replica Deployment pinned to the Pi (hostPort 4317 is safe there;
-      saraneth has no Claude Code processes). Separate from the cluster-wide
-      log-collection Alloy DaemonSet.
+      a single-replica Deployment pinned to the Pi via hostNetwork + loopback
+      bind — port 4317 is only reachable from Pi localhost. Separate from the
+      cluster-wide log-collection Alloy DaemonSet.
 spec:
   project: claude
   destination:
@@ -26,17 +26,12 @@ spec:
           type: deployment
           replicas: 1
           priorityClassName: cluster-low
+          hostNetwork: true
           nodeSelector:
             kubernetes.io/hostname: pi.home.arpa
         alloy:
           clustering:
             enabled: false
-          extraPorts:
-            - name: otlp-grpc
-              port: 4317
-              targetPort: 4317
-              hostPort: 4317
-              protocol: TCP
           resources:
             requests:
               cpu: 20m
@@ -53,7 +48,7 @@ spec:
 
               otelcol.receiver.otlp "claude" {
                 grpc {
-                  endpoint = "0.0.0.0:4317"
+                  endpoint = "127.0.0.1:4317"
                 }
                 output {
                   metrics = [otelcol.exporter.prometheus.claude.input]
