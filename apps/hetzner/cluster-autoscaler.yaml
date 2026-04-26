@@ -19,11 +19,21 @@ spec:
           tag: v1.33.4
         cloudProvider: hetzner
         autoscalingGroups:
-          - name: hcloud-cx23-nbg1
+          - name: hetz-cx23-nbg1
             minSize: 0
-            maxSize: 3
+            maxSize: 1
             instanceType: cx23
             region: nbg1
+          - name: hetz-cx23-fsn1
+            minSize: 0
+            maxSize: 1
+            instanceType: cx23
+            region: fsn1
+          - name: hetz-cx23-hel1
+            minSize: 0
+            maxSize: 1
+            instanceType: cx23
+            region: hel1
         extraEnv:
           HCLOUD_IMAGE: ubuntu-24.04
         extraEnvSecrets:
@@ -37,6 +47,7 @@ spec:
           scale-down-delay-after-add: 50m
           scale-down-unneeded-time: 5m
           skip-nodes-with-system-pods: "false"
+          expander: least-waste
         hostNetwork: true
         tolerations:
           - key: node-role.kubernetes.io/control-plane
