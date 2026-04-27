@@ -11,6 +11,12 @@ This is a GitOps repository for a personal two-node k3s cluster managed by Argo 
 
 Nodes are connected via Tailscale. The k3s datastore is PostgreSQL on `saraneth`.
 
+## Grafana dashboards
+
+Dashboard JSON lives in `zuzak/grafana`, not here. Grafana syncs from that
+repo every 60 seconds — a merge there is live within a minute. Self-merge
+permission for dashboard-only changes is granted in that repo's CLAUDE.md.
+
 ## Making changes
 
 All application configuration goes through Argo CD. Push to `main` and Argo CD
