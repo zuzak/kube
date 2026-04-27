@@ -110,6 +110,17 @@ spec:
                 }
               }
 
+              // Scrape the live-session exporter (claude-prometheus-exporter systemd user service,
+              // port 9091 on the Pi). Routes to the same Claude Prometheus as OTLP metrics.
+              prometheus.scrape "claude_live" {
+                targets = [{
+                  __address__ = "localhost:9091",
+                  job         = "claude-live",
+                }]
+                scrape_interval = "10s"
+                forward_to      = [prometheus.remote_write.claude.receiver]
+              }
+
               // --- Claude Code JSONL transcript ingestion ---
 
               local.file_match "claude_transcripts" {
