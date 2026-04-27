@@ -36,6 +36,7 @@ spec:
             region: hel1
         extraEnv:
           HCLOUD_IMAGE: ubuntu-24.04
+          HCLOUD_PUBLIC_IPV4: "false"
         extraEnvSecrets:
           HCLOUD_TOKEN:
             name: hcloud
