@@ -29,6 +29,8 @@ spec:
         controller:
           type: deployment
           replicas: 1
+          strategy:
+            type: Recreate
           priorityClassName: cluster-low
           nodeSelector:
             kubernetes.io/hostname: pi.home.arpa
