@@ -171,6 +171,13 @@ spec:
                   expression = "^(user|last-prompt|file-history-snapshot)$"
                 }
 
+                // Drop lines that exceed Loki's hard limit (256KB) — assistant entries
+                // can include full tool-result payloads that run to MB; these would fail
+                // ingestion anyway and are not useful for log analysis.
+                stage.drop {
+                  longer_than = "256KB"
+                }
+
                 // Promote common fields to labels
                 stage.labels {
                   values = {
