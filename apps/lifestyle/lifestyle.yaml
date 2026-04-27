@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: lifestyle
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: lifestyle
+  source:
+    repoURL: https://github.com/zuzak/kube.git
+    path: lifestyle
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  destination:
+    namespace: lifestyle
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

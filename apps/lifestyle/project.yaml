@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: lifestyle
+  namespace: argocd
+spec:
+  description: Personal lifestyle and household metrics
+  destinations:
+    - namespace: lifestyle
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    - https://github.com/zuzak/kube.git
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
