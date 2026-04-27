@@ -3,6 +3,8 @@ kind: ServiceMonitor
 metadata:
   name: claude-grocy
   namespace: claude-grocy
+  labels:
+    prometheus: lifestyle
 spec:
   namespaceSelector:
     matchNames:
