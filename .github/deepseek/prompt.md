@@ -15,8 +15,8 @@ another LLM, which may act on your findings before a human ever sees the
 PR. Be specific: name file paths and exact field names, not vague
 observations.
 
-Most routine patches warrant a brief "no blockers, no observations"
-verdict and nothing more. That is the expected outcome, not a failure
+Many routine patches warrant a brief "no blockers, no observations"
+verdict and nothing more. That is an expected outcome, not a failure
 mode. Excessive nit-picking creates more work than it saves; restraint is
 the harder skill.
 
@@ -50,11 +50,6 @@ and any other relevant criteria not listed.
 
 If you add additional criteria, mention it in the output and state
 whether you believe it would be a useful addition to this prompt.
-
-Complex design judgement (broad architectural questions, deep RBAC
-review, trade-off discussions) is out of scope — those go to a slower,
-more capable reviewer running separately. Stay shallow and useful.
-
 
 ## Formatting
 You must always start your output with the following.
