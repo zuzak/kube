@@ -33,7 +33,7 @@ jobs:
       - name: Build prompt
         if: steps.check.outputs.skip != 'true'
         run: |
-          cat deepseek/*.md > /tmp/prompt.md
+          cat .github/deepseek/*.md > /tmp/prompt.md
           {
             echo
             echo '## Patch'
