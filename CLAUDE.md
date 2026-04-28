@@ -17,6 +17,10 @@ Dashboard JSON lives in `zuzak/grafana`, not here. Grafana syncs from that
 repo every 60 seconds — a merge there is live within a minute. Self-merge
 permission for dashboard-only changes is granted in that repo's CLAUDE.md.
 
+The ConfigMap dashboard sidecar (`sidecar.dashboards.enabled`) is disabled.
+Do not create `grafana_dashboard: "1"` ConfigMaps — they will be silently
+ignored. All dashboards go through `zuzak/grafana`.
+
 ## Making changes
 
 All application configuration goes through Argo CD. Push to `main` and Argo CD

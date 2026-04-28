@@ -125,7 +125,7 @@ spec:
             resource: configmap
             reloadURL: "http://127.0.0.1:3000/api/admin/provisioning/datasources/reload"
           dashboards:
-            enabled: true
+            enabled: false
             label: grafana_dashboard
             labelValue: "1"
             searchNamespace: ALL
