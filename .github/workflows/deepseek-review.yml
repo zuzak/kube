@@ -63,17 +63,22 @@ jobs:
       - name: Build review comment
         if: steps.check.outputs.skip != 'true'
         run: |
-          if ! jq -e '.choices[0].message.content' /tmp/response.json > /dev/null; then
+          if ! jq -e . /tmp/response.json > /dev/null 2>&1; then
             {
-              echo "DeepSeek API error:"
-              jq -r '.error.message // "unknown error"' /tmp/response.json
+              echo "DeepSeek API error (invalid JSON response):"
+              cat /tmp/response.json
             } > /tmp/review.md
-          else
+          elif jq -e '.choices[0].message.content' /tmp/response.json > /dev/null 2>&1; then
             MODEL=$(jq -r '.model' /tmp/response.json)
             {
               jq -r '.choices[0].message.content' /tmp/response.json
               echo
               echo "_Reviewed by $MODEL, working only from the .diff_"
+            } > /tmp/review.md
+          else
+            {
+              echo "DeepSeek API error:"
+              jq -r '.error.message // "unknown error"' /tmp/response.json
             } > /tmp/review.md
           fi
 
@@ -81,7 +86,7 @@ jobs:
         if: always() && steps.check.outputs.skip != 'true'
         run: |
           echo "::group::DeepSeek raw response"
-          jq . /tmp/response.json
+          jq . /tmp/response.json 2>/dev/null || cat /tmp/response.json
           echo "::endgroup::"
 
       - name: Upload reasoning trace
