@@ -108,6 +108,14 @@ spec:
                 isDefault: true
                 jsonData:
                   timeInterval: 30s
+              - name: Lifestyle Prometheus
+                uid: lifestyle-prometheus
+                type: prometheus
+                access: proxy
+                url: http://prometheus-lifestyle.lifestyle.svc.cluster.local:9090
+                isDefault: false
+                jsonData:
+                  timeInterval: 30s
         sidecar:
           datasources:
             enabled: true
