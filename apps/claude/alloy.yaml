@@ -34,6 +34,11 @@ spec:
           priorityClassName: cluster-low
           nodeSelector:
             kubernetes.io/hostname: pi.home.arpa
+          extraEnv:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
           volumes:
             extra:
               - name: home-claude
@@ -116,7 +121,7 @@ spec:
               // port 9091 on the Pi). Routes to the same Claude Prometheus as OTLP metrics.
               prometheus.scrape "claude_live" {
                 targets = [{
-                  __address__ = "100.102.21.87:9091",
+                  __address__ = env("NODE_IP") + ":9091",
                   job         = "claude-live",
                 }]
                 scrape_interval = "10s"
