@@ -29,7 +29,7 @@ spec:
         controller:
           type: deployment
           replicas: 1
-          strategy:
+          updateStrategy:
             type: Recreate
           priorityClassName: cluster-low
           nodeSelector:
