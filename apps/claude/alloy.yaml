@@ -116,7 +116,7 @@ spec:
               // port 9091 on the Pi). Routes to the same Claude Prometheus as OTLP metrics.
               prometheus.scrape "claude_live" {
                 targets = [{
-                  __address__ = "localhost:9091",
+                  __address__ = "192.168.1.2:9091",
                   job         = "claude-live",
                 }]
                 scrape_interval = "10s"
