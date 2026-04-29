@@ -34,11 +34,6 @@ spec:
           priorityClassName: cluster-low
           nodeSelector:
             kubernetes.io/hostname: pi.home.arpa
-          extraEnv:
-            - name: NODE_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
           volumes:
             extra:
               - name: home-claude
@@ -52,6 +47,11 @@ spec:
         alloy:
           clustering:
             enabled: false
+          extraEnv:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
           extraPorts:
             - name: otlp-grpc
               port: 4317
