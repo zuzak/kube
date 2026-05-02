@@ -36,7 +36,7 @@ spec:
             region: hel1
         extraEnv:
           HCLOUD_IMAGE: ubuntu-24.04
-          HCLOUD_PUBLIC_IPV4: "false"
+          HCLOUD_PUBLIC_IPV4: "true" # k3s install script needs GitHub which is IPv4 only
         extraEnvSecrets:
           HCLOUD_TOKEN:
             name: hcloud
