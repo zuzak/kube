@@ -9,11 +9,21 @@
 #
 # k3s server endpoint: saraneth via Tailscale MagicDNS (resolves to 100.95.187.35)
 # Tailnet: gentoo-mine.ts.net
+#
+# These nodes have no public IPv4. Tailscale is installed via apt (pkgs.tailscale.com
+# has AAAA records). An exit node is used temporarily during k3s installation so that
+# GitHub (IPv4-only) is reachable; it is disabled once k3s is running.
 
 runcmd:
-  # Install Tailscale and join the tailnet as a tagged ephemeral node
-  - curl -fsSL https://tailscale.com/install.sh | sh
-  - tailscale up --authkey=__TAILSCALE_AUTH_KEY__ --advertise-tags=tag:k3s --hostname=hcloud-$(curl -sf http://169.254.169.254/hetzner/v1/metadata/hostname)
+  # Install Tailscale via apt (pkgs.tailscale.com has AAAA records, no IPv4 needed)
+  - mkdir -p --mode=0755 /usr/share/keyrings
+  - curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/noble.noarmor.gpg -o /usr/share/keyrings/tailscale-archive-keyring.gpg
+  - curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/noble.tailscale-keyring.list -o /etc/apt/sources.list.d/tailscale.list
+  - apt-get update -qq
+  - apt-get install -y tailscale
+
+  # Join the tailnet and route through an exit node for IPv4 reachability during install
+  - tailscale up --authkey=__TAILSCALE_AUTH_KEY__ --advertise-tags=tag:k3s --hostname=hcloud-$(curl -sf http://169.254.169.254/hetzner/v1/metadata/hostname) --exit-node=auto:any
 
   # Wait for Tailscale to assign an IP before attempting to reach the k3s API
   - until tailscale ip -4 2>/dev/null; do sleep 2; done
@@ -27,3 +37,6 @@ runcmd:
     sh -s - agent
     --kubelet-arg=provider-id=hcloud://$(curl -sf http://169.254.169.254/hetzner/v1/metadata/instance-id)
     --flannel-iface=tailscale0
+
+  # Exit node no longer needed once k3s is running
+  - tailscale set --exit-node=
