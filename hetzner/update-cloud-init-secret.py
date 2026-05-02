@@ -29,7 +29,7 @@ def kubectl(*args):
 def get_existing_values():
     raw = kubectl("get", "secret", "-n", SECRET_NS, SECRET_NAME,
                   "-o", "jsonpath={.data.cloud-init}")
-    existing = base64.b64decode(base64.b64decode(raw)).decode()
+    existing = base64.b64decode(raw).decode()
     ts_match = re.search(r'--authkey=(tskey-\S+)', existing)
     k3s_match = re.search(r'K3S_TOKEN=(\S+)', existing)
     if not ts_match or not k3s_match:
