@@ -20,7 +20,7 @@ spec:
         cloudProvider: hetzner
         autoscalingGroups:
           - name: hetz-cx23-nbg1
-            minSize: 0
+            minSize: 1
             maxSize: 1
             instanceType: cx23
             region: nbg1
